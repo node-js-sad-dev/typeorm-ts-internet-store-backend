@@ -6,6 +6,7 @@ import {
   Repository,
 } from "typeorm";
 import { TGetListArgs, TGetOneArgs } from "./types";
+import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 
 export default class MainService<T extends ObjectLiteral> {
   private repository: Repository<T>;
@@ -64,5 +65,19 @@ export default class MainService<T extends ObjectLiteral> {
 
   public getCount = async (search: FindOptionsWhere<T>) => {
     return this.repository.count({ where: search });
+  };
+
+  public update = async ({
+    search,
+    update,
+  }: {
+    search: FindOptionsWhere<T>;
+    update: QueryDeepPartialEntity<T>;
+  }) => {
+    const result = (await this.repository.update(search, update)).raw[0];
+
+    // TODO -> add localization
+
+    return result;
   };
 }
