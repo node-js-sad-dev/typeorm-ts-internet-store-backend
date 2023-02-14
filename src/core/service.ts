@@ -5,7 +5,7 @@ import {
   ObjectLiteral,
   Repository,
 } from "typeorm";
-import { TGetListArgs, TGetOneArgs } from "./types";
+import { TGetListArgs, TGetOneArgs } from "./types/service";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 
 export default class MainService<T extends ObjectLiteral> {
