@@ -80,4 +80,8 @@ export default class MainService<T extends ObjectLiteral> {
 
     return result;
   };
+
+  public delete = async (search: FindOptionsWhere<T>) => {
+    return this.repository.delete(search);
+  };
 }
