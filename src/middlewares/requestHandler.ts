@@ -4,7 +4,7 @@ import {
   ExtendedRequest,
 } from "../core/types/router";
 import { Response } from "express";
-import EndpointError from "../core/BaseError";
+import EndpointError from "../core/errors/BaseError";
 
 export function requestHandler(func: ExpressEndpointFunction) {
   return function (req: ExtendedRequest, res: Response) {
@@ -14,7 +14,10 @@ export function requestHandler(func: ExpressEndpointFunction) {
   };
 }
 
-function sendResponseSuccess(res: Response, result: EndpointReturnType) {
+function sendResponseSuccess(
+  res: Response,
+  result: Awaited<EndpointReturnType>
+) {
   if (!result) return res.status(200);
 
   const { status = false, payload = false } = result;

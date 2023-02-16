@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Client } from "../client/model";
 import { OrderProduct } from "../orderProducts/model";
@@ -15,6 +17,12 @@ export class Order {
 
   @Column({ type: "money" })
   price: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(() => Client, (client) => client.orders)
   client: Client;

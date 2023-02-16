@@ -1,14 +1,15 @@
 import "reflect-metadata";
 
 import { DataSource } from "typeorm";
-import { Client } from "./entities/client/model";
-import { Order } from "./entities/order/model";
-import { OrderProduct } from "./entities/orderProducts/model";
-import { Product } from "./entities/product/model";
-import { ProductSpecs } from "./entities/productSpecs/model";
-import { Category } from "./entities/category/model";
-import { WatchedProducts } from "./entities/watchedProducts/model";
-import { Wishlist } from "./entities/wishlist/model";
+import { Client } from "./modules/client/model";
+import { Order } from "./modules/order/model";
+import { OrderProduct } from "./modules/orderProducts/model";
+import { Product } from "./modules/product/model";
+import { ProductSpecs } from "./modules/productSpecs/model";
+import { Category } from "./modules/category/model";
+import { WatchedProducts } from "./modules/watchedProducts/model";
+import { Wishlist } from "./modules/wishlist/model";
+import { Token } from "./modules/token/model";
 
 const {
   DB_HOST = "localhost",
@@ -34,7 +35,9 @@ export const AppDataSource = new DataSource({
     Category,
     WatchedProducts,
     Wishlist,
+    Token,
   ],
   synchronize: true,
-  logging: false,
+  logging: process.env.NODE_ENV === "dev" ? "all" : false,
+  logger: "file",
 });

@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Product } from "../product/model";
 import { ProductSpecType } from "./type";
 
@@ -18,6 +25,12 @@ export class ProductSpecs {
     enum: ProductSpecType,
   })
   specType: ProductSpecType;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(() => Product, (product) => product.specs)
   product: Product;

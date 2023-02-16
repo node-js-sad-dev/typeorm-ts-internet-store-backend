@@ -9,14 +9,14 @@ import { TGetListArgs, TGetOneArgs } from "./types/service";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 
 export default class MainService<T extends ObjectLiteral> {
-  private repository: Repository<T>;
+  protected repository: Repository<T>;
 
   constructor(repository: string) {
     this.repository = AppDataSource.getRepository(repository);
   }
 
   public create = async (data: DeepPartial<T>) => {
-    const result = this.repository.create(data);
+    const result = await this.repository.save(data);
 
     //TODO -> add localization if needed
 
@@ -83,5 +83,9 @@ export default class MainService<T extends ObjectLiteral> {
 
   public delete = async (search: FindOptionsWhere<T>) => {
     return this.repository.delete(search);
+  };
+
+  public exist = async (search: FindOptionsWhere<T>) => {
+    return this.repository.exist({ where: search });
   };
 }

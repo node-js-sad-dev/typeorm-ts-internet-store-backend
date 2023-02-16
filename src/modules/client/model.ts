@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Order } from "../order/model";
 import { WatchedProducts } from "../watchedProducts/model";
 
@@ -13,14 +20,26 @@ export class Client {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
-  @Column()
+  @Column({ unique: true, nullable: true })
   phone: string;
 
-  @Column()
+  @Column({ unique: true, nullable: true })
   email: string;
+
+  @Column()
+  password: string;
+
+  @Column()
+  passwordSalt: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @OneToMany(() => Order, (order) => order.client)
   orders: Order[];
