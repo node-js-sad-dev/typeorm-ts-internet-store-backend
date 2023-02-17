@@ -1,4 +1,4 @@
-import { default as ClientService } from "../client/service";
+import { default as UserService } from ".//service";
 import { EndpointReturnType, ExtendedRequest } from "../../core/types/router";
 import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
@@ -6,12 +6,12 @@ import BaseError from "../../core/errors/BaseError";
 import { default as AuthUtils } from "../auth/utils";
 
 export default class Controller {
-  private service: ClientService;
+  private service: UserService;
 
   private authUtils: AuthUtils;
 
   constructor() {
-    this.service = new ClientService();
+    this.service = new UserService();
 
     this.authUtils = new AuthUtils();
   }
@@ -26,7 +26,7 @@ export default class Controller {
       passwordSalt
     );
 
-    const [client, clientError] = await handleAsync(
+    const [user, userError] = await handleAsync(
       this.service.create({
         ...registerFields,
         password: password,
@@ -34,11 +34,11 @@ export default class Controller {
       })
     );
 
-    if (clientError) throw new BaseError(400, clientError);
+    if (userError) throw new BaseError(400, userError);
 
     return {
       status: 201,
-      payload: client,
+      payload: user,
     };
   };
 }

@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import { DataSource } from "typeorm";
-import { Client } from "./modules/client/model";
+import { User } from "./modules/user/model";
 import { Order } from "./modules/order/model";
 import { OrderProduct } from "./modules/orderProducts/model";
 import { Product } from "./modules/product/model";
@@ -27,7 +27,7 @@ export const AppDataSource = new DataSource({
   password: DB_PASSWORD,
   database: DB_NAME,
   entities: [
-    Client,
+    User,
     Order,
     OrderProduct,
     Product,

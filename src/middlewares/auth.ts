@@ -7,7 +7,7 @@ import { ExtendedRequest, UserObject } from "../core/types/router";
 import { handleAsync } from "../utils/handleAsync";
 
 import { default as TokenService } from "../modules/token/service";
-import { default as ClientService } from "../modules/client/service";
+import { default as UserService } from "../modules/user/service";
 
 export function getToken(authHeader: string) {
   const splitToken = authHeader.split(" ");
@@ -49,13 +49,13 @@ export async function auth(
 
   if (expiredToken) throw new BaseError(401, "Expired token");
 
-  const [clientExist, clientExistError] = await handleAsync(
-    new ClientService().exist({ id: userObj.id })
+  const [userExist, userExistError] = await handleAsync(
+    new UserService().exist({ id: userObj.id })
   );
 
-  if (clientExistError) throw new BaseError(400, "Check if client exist error");
+  if (userExistError) throw new BaseError(400, "Check if user exist error");
 
-  if (!clientExist) throw new BaseError(404, "Client not found");
+  if (!userExist) throw new BaseError(404, "User not found");
 
   req.user = userObj;
 

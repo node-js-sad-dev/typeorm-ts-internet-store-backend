@@ -8,9 +8,10 @@ import {
 } from "typeorm";
 import { Order } from "../order/model";
 import { WatchedProducts } from "../watchedProducts/model";
+import { UserRole } from "./type";
 
 @Entity()
-export class Client {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -35,15 +36,18 @@ export class Client {
   @Column()
   passwordSalt: string;
 
+  @Column({ enum: UserRole, default: UserRole.USER })
+  role: UserRole;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Order, (order) => order.client)
+  @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 
-  @OneToMany(() => WatchedProducts, (watchedProducts) => watchedProducts.client)
+  @OneToMany(() => WatchedProducts, (watchedProducts) => watchedProducts.user)
   watchedProducts: WatchedProducts[];
 }

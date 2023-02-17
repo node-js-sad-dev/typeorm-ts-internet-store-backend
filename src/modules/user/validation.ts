@@ -4,7 +4,7 @@ import Joi from "joi";
 import BaseError from "../../core/errors/BaseError";
 
 export default class Validation {
-  public registerClient = (
+  public registerUser = (
     req: ExtendedRequest,
     res: Response,
     next: NextFunction

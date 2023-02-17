@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Client } from "../client/model";
+import { User } from "../user/model";
 import { OrderProduct } from "../orderProducts/model";
 
 @Entity()
@@ -24,8 +24,8 @@ export class Order {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Client, (client) => client.orders)
-  client: Client;
+  @ManyToOne(() => User, (user) => user.orders)
+  user: User;
 
   @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order)
   orderProducts: OrderProduct[];

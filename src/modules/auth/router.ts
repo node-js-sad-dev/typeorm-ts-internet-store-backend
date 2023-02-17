@@ -26,7 +26,7 @@ export default class Router {
   private routes() {
     this.router.post(
       "/login",
-      this.validator.loginClient,
+      this.validator.loginUser,
       requestHandler(this.controller.login)
     );
 

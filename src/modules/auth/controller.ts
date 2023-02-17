@@ -1,4 +1,4 @@
-import { default as ClientService } from "../client/service";
+import { default as UserService } from "../user/service";
 import { default as TokenService } from "../token/service";
 
 import { EndpointReturnType, ExtendedRequest } from "../../core/types/router";
@@ -10,13 +10,13 @@ import jwt from "jsonwebtoken";
 import { getToken } from "../../middlewares/auth";
 
 export default class Controller {
-  private service: ClientService;
+  private service: UserService;
   private tokenService: TokenService;
 
   private utils: AuthUtils;
 
   constructor() {
-    this.service = new ClientService();
+    this.service = new UserService();
     this.tokenService = new TokenService();
 
     this.utils = new AuthUtils();
@@ -25,28 +25,31 @@ export default class Controller {
   public login = async (req: ExtendedRequest): EndpointReturnType => {
     const { login, password } = req.body;
 
-    const [client, clientError] = await handleAsync(
-      this.service.getClientByLogin(login)
+    const [user, userError] = await handleAsync(
+      this.service.getUserByLogin(login)
     );
 
-    if (clientError) throw new BaseError(400, "Check if client exist error");
+    if (userError) throw new BaseError(400, "Check if user exist error");
 
-    if (!client) throw new BaseError(404, "Client with such login not found");
+    if (!user) throw new BaseError(404, "User with such login not found");
 
     const validPassword = this.utils.checkPassword(
       password,
-      client.password,
-      client.passwordSalt
+      user.password,
+      user.passwordSalt
     );
 
     if (!validPassword) throw new BaseError(403, "Wrong password");
 
-    const token = jwt.sign({ id: client.id }, process.env.JWT_SECRET as string);
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET as string
+    );
 
     return {
       status: 200,
       payload: {
-        client,
+        user,
         token,
       },
     };

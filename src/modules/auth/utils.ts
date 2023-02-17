@@ -19,16 +19,16 @@ export default class Utils {
   }
 
   public checkPassword(
-    passwordFromClient: string,
+    passwordFromUser: string,
     passwordFromDb: string,
     passwordSalt: string
   ) {
-    const hashedPasswordFromClient = this.hashPassword(
-      passwordFromClient,
+    const hashedPasswordFromUser = this.hashPassword(
+      passwordFromUser,
       passwordSalt
     );
 
-    return hashedPasswordFromClient === passwordFromDb;
+    return hashedPasswordFromUser === passwordFromDb;
   }
 
   public hashPassword = (password: string, passwordSalt: string) => {
