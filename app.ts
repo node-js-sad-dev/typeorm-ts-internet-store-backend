@@ -8,6 +8,15 @@ import cors from "cors";
 import { AppDataSource } from "./src/db";
 import RootRouter from "./src/root.router";
 import { errorHandler, routeNotFound } from "./src/middlewares/errorHandler";
+import { UserObject } from "./src/core/types/router";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: UserObject;
+    }
+  }
+}
 
 AppDataSource.initialize()
   .then(async () => {

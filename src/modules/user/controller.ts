@@ -1,9 +1,11 @@
 import { default as UserService } from ".//service";
-import { EndpointReturnType, ExtendedRequest } from "../../core/types/router";
+import { EndpointReturnType } from "../../core/types/router";
 import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
 
 import { default as AuthUtils } from "../auth/utils";
+
+import { Request } from "express";
 
 export default class Controller {
   private service: UserService;
@@ -16,7 +18,7 @@ export default class Controller {
     this.authUtils = new AuthUtils();
   }
 
-  public register = async (req: ExtendedRequest): EndpointReturnType => {
+  public register = async (req: Request): EndpointReturnType => {
     const registerFields = req.body;
 
     const passwordSalt = this.authUtils.generatePasswordSalt();
@@ -39,6 +41,14 @@ export default class Controller {
     return {
       status: 201,
       payload: user,
+    };
+  };
+
+  public delete = async (req: Request): EndpointReturnType => {
+    const { id } = req.user;
+
+    return {
+      status: 200,
     };
   };
 }

@@ -1,13 +1,12 @@
 import {
   EndpointReturnType,
   ExpressEndpointFunction,
-  ExtendedRequest,
 } from "../core/types/router";
-import { Response } from "express";
+import { Response, Request } from "express";
 import EndpointError from "../core/errors/BaseError";
 
 export function requestHandler(func: ExpressEndpointFunction) {
-  return function (req: ExtendedRequest, res: Response) {
+  return function (req: Request, res: Response) {
     return func(req)
       .then((result) => sendResponseSuccess(res, result))
       .catch((err) => sendResponseFail(res, err));

@@ -1,14 +1,11 @@
-import { ExtendedRequest } from "../../core/types/router";
 import { NextFunction, Response } from "express";
 import Joi from "joi";
 import BaseError from "../../core/errors/BaseError";
 
+import { Request } from "express";
+
 export default class Validation {
-  public loginUser = (
-    req: ExtendedRequest,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public loginUser = (req: Request, res: Response, next: NextFunction) => {
     const { body } = req;
 
     const validation = Joi.object({

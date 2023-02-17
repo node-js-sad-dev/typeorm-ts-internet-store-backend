@@ -6,10 +6,6 @@ export type UserObject = {
   role: UserRole;
 };
 
-export type ExtendedRequest = Request & {
-  user?: UserObject;
-};
-
 export type EndpointReturnType = Promise<
   Partial<{
     status: number;
@@ -17,6 +13,4 @@ export type EndpointReturnType = Promise<
   }>
 >;
 
-export type ExpressEndpointFunction = (
-  req: ExtendedRequest
-) => EndpointReturnType;
+export type ExpressEndpointFunction = (req: Request) => EndpointReturnType;

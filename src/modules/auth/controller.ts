@@ -1,13 +1,15 @@
 import { default as UserService } from "../user/service";
 import { default as TokenService } from "../token/service";
 
-import { EndpointReturnType, ExtendedRequest } from "../../core/types/router";
+import { EndpointReturnType } from "../../core/types/router";
 import { default as AuthUtils } from "./utils";
 import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
 
 import jwt from "jsonwebtoken";
 import { getToken } from "../../middlewares/auth";
+
+import { Request } from "express";
 
 export default class Controller {
   private service: UserService;
@@ -22,7 +24,7 @@ export default class Controller {
     this.utils = new AuthUtils();
   }
 
-  public login = async (req: ExtendedRequest): EndpointReturnType => {
+  public login = async (req: Request): EndpointReturnType => {
     const { login, password } = req.body;
 
     const [user, userError] = await handleAsync(
@@ -55,7 +57,7 @@ export default class Controller {
     };
   };
 
-  public logout = async (req: ExtendedRequest): EndpointReturnType => {
+  public logout = async (req: Request): EndpointReturnType => {
     const { token } = getToken(req.headers.authorization as string);
 
     try {

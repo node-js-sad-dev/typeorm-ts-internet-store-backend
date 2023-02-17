@@ -1,8 +1,8 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Response, Request } from "express";
 import jwt from "jsonwebtoken";
 
 import BaseError from "../core/errors/BaseError";
-import { ExtendedRequest, UserObject } from "../core/types/router";
+import { UserObject } from "../core/types/router";
 
 import { handleAsync } from "../utils/handleAsync";
 
@@ -18,11 +18,7 @@ export function getToken(authHeader: string) {
   };
 }
 
-export async function auth(
-  req: ExtendedRequest,
-  res: Response,
-  next: NextFunction
-) {
+export async function auth(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader)
