@@ -47,6 +47,26 @@ export default class Controller {
   public delete = async (req: Request): EndpointReturnType => {
     const { id } = req.user;
 
+    const [deleteUser, deleteUserError] = await handleAsync(
+      this.service.delete({ id })
+    );
+
+    if (deleteUserError) throw new BaseError(400, "Delete user error");
+
+    return {
+      status: 204,
+    };
+  };
+
+  public update = async (req: Request): EndpointReturnType => {
+    const { id } = req.user;
+
+    return {
+      status: 200,
+    };
+  };
+
+  public updateByAdmin = async (req: Request): EndpointReturnType => {
     return {
       status: 200,
     };
