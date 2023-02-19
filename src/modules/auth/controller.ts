@@ -1,8 +1,8 @@
-import { default as UserService } from "../user/service";
-import { default as TokenService } from "../token/service";
+import UserService from "../user/service";
+import TokenService from "../token/service";
 
 import { EndpointReturnType } from "../../core/types/router";
-import { default as AuthUtils } from "./utils";
+import AuthUtils from "./utils";
 import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
 
@@ -11,7 +11,7 @@ import { getToken } from "../../middlewares/auth";
 
 import { Request } from "express";
 
-export default class Controller {
+export default class AuthController {
   private service: UserService;
   private tokenService: TokenService;
 
@@ -27,26 +27,17 @@ export default class Controller {
   public login = async (req: Request): EndpointReturnType => {
     const { login, password } = req.body;
 
-    const [user, userError] = await handleAsync(
-      this.service.getUserByLogin(login)
-    );
+    const [user, userError] = await handleAsync(this.service.getUserByLogin(login));
 
     if (userError) throw new BaseError(400, "Check if user exist error");
 
     if (!user) throw new BaseError(404, "User with such login not found");
 
-    const validPassword = this.utils.checkPassword(
-      password,
-      user.password,
-      user.passwordSalt
-    );
+    const validPassword = this.utils.checkPassword(password, user.password, user.passwordSalt);
 
     if (!validPassword) throw new BaseError(403, "Wrong password");
 
-    const token = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.JWT_SECRET as string
-    );
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET as string);
 
     return {
       status: 200,

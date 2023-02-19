@@ -1,10 +1,4 @@
-import {
-  FindOptionsOrder,
-  FindOptionsRelations,
-  FindOptionsSelect,
-  FindOptionsWhere,
-  ObjectLiteral,
-} from "typeorm";
+import { FindOptionsOrder, FindOptionsRelations, FindOptionsSelect, FindOptionsWhere, ObjectLiteral } from "typeorm";
 
 export type TGetListArgs<T extends ObjectLiteral> = Partial<{
   search: FindOptionsWhere<T>;
@@ -15,7 +9,4 @@ export type TGetListArgs<T extends ObjectLiteral> = Partial<{
   relations: FindOptionsRelations<T>;
 }>;
 
-export type TGetOneArgs<T extends ObjectLiteral> = Omit<
-  TGetListArgs<T>,
-  "limit" | "skip"
->;
+export type TGetOneArgs<T extends ObjectLiteral> = Omit<TGetListArgs<T>, "limit" | "skip">;

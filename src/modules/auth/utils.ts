@@ -1,7 +1,7 @@
 import { createHmac } from "crypto";
 import { getRandomInt } from "../../utils/random";
 
-export default class Utils {
+export default class AuthUtils {
   private readonly PASSWORD_SALT_LENGTH = 6;
 
   public generatePasswordSalt() {
@@ -18,15 +18,8 @@ export default class Utils {
     return passwordSalt.join("");
   }
 
-  public checkPassword(
-    passwordFromUser: string,
-    passwordFromDb: string,
-    passwordSalt: string
-  ) {
-    const hashedPasswordFromUser = this.hashPassword(
-      passwordFromUser,
-      passwordSalt
-    );
+  public checkPassword(passwordFromUser: string, passwordFromDb: string, passwordSalt: string) {
+    const hashedPasswordFromUser = this.hashPassword(passwordFromUser, passwordSalt);
 
     return hashedPasswordFromUser === passwordFromDb;
   }

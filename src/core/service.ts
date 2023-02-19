@@ -1,17 +1,18 @@
 import { AppDataSource } from "../db";
-import {
-  DeepPartial,
-  FindOptionsWhere,
-  ObjectLiteral,
-  Repository,
-} from "typeorm";
+import { DeepPartial, FindOptionsWhere, ObjectLiteral, Repository } from "typeorm";
 import { TGetListArgs, TGetOneArgs } from "./types/service";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
+import UserService from "../modules/user/service";
+import { handleAsync } from "../utils/handleAsync";
 
 export default class MainService<T extends ObjectLiteral> {
   protected repository: Repository<T>;
 
+  protected repositoryName: string;
+
   constructor(repository: string) {
+    this.repositoryName = repository;
+
     this.repository = AppDataSource.getRepository(repository);
   }
 
@@ -23,14 +24,7 @@ export default class MainService<T extends ObjectLiteral> {
     return result;
   };
 
-  public getList = async ({
-    search = {},
-    limit = 10,
-    skip = 0,
-    select = {},
-    order = {},
-    relations = {},
-  }: TGetListArgs<T>) => {
+  public getList = async ({ search = {}, limit = 10, skip = 0, select = {}, order = {}, relations = {} }: TGetListArgs<T>) => {
     const result = await this.repository.find({
       where: search,
       skip: skip,
@@ -45,12 +39,7 @@ export default class MainService<T extends ObjectLiteral> {
     return result;
   };
 
-  public getOne = async ({
-    search = {},
-    select = {},
-    order = {},
-    relations = {},
-  }: TGetOneArgs<T>) => {
+  public getOne = async ({ search = {}, select = {}, order = {}, relations = {} }: TGetOneArgs<T>) => {
     const result = await this.repository.findOne({
       where: search,
       select: select,
@@ -67,18 +56,14 @@ export default class MainService<T extends ObjectLiteral> {
     return this.repository.count({ where: search });
   };
 
-  public update = async ({
-    search,
-    update,
-  }: {
-    search: FindOptionsWhere<T>;
-    update: QueryDeepPartialEntity<T>;
-  }) => {
-    const result = (await this.repository.update(search, update)).raw[0];
+  public update = async ({ search, update }: { search: FindOptionsWhere<T>; update: QueryDeepPartialEntity<T> }) => {
+    const [result, resultError] = await handleAsync(
+      this.repository.createQueryBuilder().update(update).where(search).returning("*").updateEntity(true).execute()
+    );
 
-    // TODO -> add localization
+    if (resultError) throw new Error("Update error");
 
-    return result;
+    return result.raw;
   };
 
   public delete = async (search: FindOptionsWhere<T>) => {
@@ -89,3 +74,12 @@ export default class MainService<T extends ObjectLiteral> {
     return this.repository.exist({ where: search });
   };
 }
+
+// setTimeout(async () => {
+//   console.log(
+//     await new UserService().update({
+//       search: { id: 6 },
+//       update: { address: "Улица Пушкина дом Колотушкина" },
+//     })
+//   );
+// }, 1000);
