@@ -35,6 +35,8 @@ export default class UserService extends MainService<User> {
 
     const result = queryBuilder.getMany();
 
+    console.log(queryBuilder.getSql());
+
     return Promise.all([result, totalCount]);
   };
 }

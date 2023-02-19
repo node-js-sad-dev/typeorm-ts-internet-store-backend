@@ -43,6 +43,12 @@ export default class UserRouter {
       this.validation.getUserById,
       requestHandler(this.controller.getById)
     );
-    this.router.get("/", auth, this.validation.getListUsers, requestHandler(this.controller.get));
+    this.router.get(
+      "/",
+      auth,
+      roleValidation([UserRole.ADMIN]),
+      this.validation.getListUsers,
+      requestHandler(this.controller.get)
+    );
   }
 }
