@@ -38,7 +38,10 @@ export class Product {
   @OneToMany(() => ProductSpecs, (productSpecs) => productSpecs.product)
   specs: ProductSpecs[];
 
-  @OneToMany(() => WatchedProducts, (watchedProducts) => watchedProducts.product)
+  @OneToMany(
+    () => WatchedProducts,
+    (watchedProducts) => watchedProducts.product
+  )
   watchedProducts: WatchedProducts[];
 
   @ManyToMany(() => Category, (category) => category.products)

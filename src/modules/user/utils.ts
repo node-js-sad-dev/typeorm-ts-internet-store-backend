@@ -20,7 +20,10 @@ export default class UserUtils {
     if (updateFields.password) {
       const passwordSalt = this.authUtils.generatePasswordSalt();
 
-      const password = this.authUtils.hashPassword(updateFields.password, passwordSalt);
+      const password = this.authUtils.hashPassword(
+        updateFields.password,
+        passwordSalt
+      );
 
       updateFields.password = password;
       updateFields.passwordSalt = passwordSalt;

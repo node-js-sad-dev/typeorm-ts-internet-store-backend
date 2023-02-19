@@ -1,4 +1,7 @@
-import { EndpointReturnType, ExpressEndpointFunction } from "../core/types/router";
+import {
+  EndpointReturnType,
+  ExpressEndpointFunction,
+} from "../core/types/router";
 import { Response, Request } from "express";
 import EndpointError from "../core/errors/BaseError";
 
@@ -10,7 +13,10 @@ export function requestHandler(func: ExpressEndpointFunction) {
   };
 }
 
-function sendResponseSuccess(res: Response, result: Awaited<EndpointReturnType>) {
+function sendResponseSuccess(
+  res: Response,
+  result: Awaited<EndpointReturnType>
+) {
   if (!result) return res.status(200);
 
   const { status = false, payload = false } = result;

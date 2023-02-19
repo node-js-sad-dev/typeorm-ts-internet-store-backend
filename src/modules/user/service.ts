@@ -14,28 +14,46 @@ export default class UserService extends MainService<User> {
       .getOne();
   };
 
-  public getListAndCountOfUsers = async (options: FindOptionsWhere<User>, page: number, limit: number) => {
+  public getListAndCountOfUsers = async (
+    options: Partial<User>,
+    page: number,
+    limit: number
+  ) => {
     const queryBuilder = this.repository.createQueryBuilder("user");
 
-    if (options.name) queryBuilder.andWhere("user.name ILIKE :name", { name: `%${options.name}%` });
+    if (options.name)
+      queryBuilder.andWhere("user.name ILIKE :name", {
+        name: `%${options.name}%`,
+      });
 
-    if (options.lastName) queryBuilder.andWhere("user.lastName ILIKE :lastName", { lastName: `%${options.lastName}%` });
+    if (options.lastName)
+      queryBuilder.andWhere("user.lastName ILIKE :lastName", {
+        lastName: `%${options.lastName}%`,
+      });
 
-    if (options.phone) queryBuilder.andWhere("user.phone ILIKE :phone", { phone: `%${options.phone}%` });
+    if (options.phone)
+      queryBuilder.andWhere("user.phone ILIKE :phone", {
+        phone: `%${options.phone}%`,
+      });
 
-    if (options.email) queryBuilder.andWhere("user.email ILIKE :email", { email: `%${options.email}%` });
+    if (options.email)
+      queryBuilder.andWhere("user.email ILIKE :email", {
+        email: `%${options.email}%`,
+      });
 
-    if (options.role) queryBuilder.andWhere("user.role = :role", { role: options.role });
+    if (options.role)
+      queryBuilder.andWhere("user.role = :role", { role: options.role });
 
-    if (options.address) queryBuilder.andWhere("user.address ILIKE :address", { address: `%${options.address}%` });
+    if (options.address)
+      queryBuilder.andWhere("user.address ILIKE :address", {
+        address: `%${options.address}%`,
+      });
 
     const totalCount = queryBuilder.getCount();
 
     queryBuilder.skip((page - 1) * limit).take(limit);
 
     const result = queryBuilder.getMany();
-
-    console.log(queryBuilder.getSql());
 
     return Promise.all([result, totalCount]);
   };

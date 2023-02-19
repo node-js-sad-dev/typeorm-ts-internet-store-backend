@@ -1,5 +1,10 @@
 import { AppDataSource } from "../db";
-import { DeepPartial, FindOptionsWhere, ObjectLiteral, Repository } from "typeorm";
+import {
+  DeepPartial,
+  FindOptionsWhere,
+  ObjectLiteral,
+  Repository,
+} from "typeorm";
 import { TGetListArgs, TGetOneArgs } from "./types/service";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import UserService from "../modules/user/service";
@@ -24,7 +29,14 @@ export default class MainService<T extends ObjectLiteral> {
     return result;
   };
 
-  public getList = async ({ search = {}, limit = 10, skip = 0, select = {}, order = {}, relations = {} }: TGetListArgs<T>) => {
+  public getList = async ({
+    search = {},
+    limit = 10,
+    skip = 0,
+    select = {},
+    order = {},
+    relations = {},
+  }: TGetListArgs<T>) => {
     const result = await this.repository.find({
       where: search,
       skip: skip,
@@ -39,7 +51,12 @@ export default class MainService<T extends ObjectLiteral> {
     return result;
   };
 
-  public getOne = async ({ search = {}, select = {}, order = {}, relations = {} }: TGetOneArgs<T>) => {
+  public getOne = async ({
+    search = {},
+    select = {},
+    order = {},
+    relations = {},
+  }: TGetOneArgs<T>) => {
     const result = await this.repository.findOne({
       where: search,
       select: select,
@@ -56,9 +73,21 @@ export default class MainService<T extends ObjectLiteral> {
     return this.repository.count({ where: search });
   };
 
-  public update = async ({ search, update }: { search: FindOptionsWhere<T>; update: QueryDeepPartialEntity<T> }) => {
+  public update = async ({
+    search,
+    update,
+  }: {
+    search: FindOptionsWhere<T>;
+    update: QueryDeepPartialEntity<T>;
+  }) => {
     const [result, resultError] = await handleAsync(
-      this.repository.createQueryBuilder().update(update).where(search).returning("*").updateEntity(true).execute()
+      this.repository
+        .createQueryBuilder()
+        .update(update)
+        .where(search)
+        .returning("*")
+        .updateEntity(true)
+        .execute()
     );
 
     if (resultError) throw new Error("Update error");

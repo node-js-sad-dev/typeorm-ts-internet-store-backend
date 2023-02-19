@@ -36,14 +36,19 @@ export default class UserValidation {
     return next();
   };
 
-  public updateUserByAdmin = (req: Request, res: Response, next: NextFunction) => {
+  public updateUserByAdmin = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     const { body, params } = req;
 
     const validationParams = Joi.object({
       id: Joi.number().required(),
     }).validate(params);
 
-    if (validationParams.error) throw new BaseError(400, validationParams.error.message);
+    if (validationParams.error)
+      throw new BaseError(400, validationParams.error.message);
 
     const validationBody = Joi.object({
       name: Joi.string(),
@@ -55,7 +60,8 @@ export default class UserValidation {
       password: Joi.string().min(8).max(16),
     }).validate(body);
 
-    if (validationBody.error) throw new BaseError(400, validationBody.error.message);
+    if (validationBody.error)
+      throw new BaseError(400, validationBody.error.message);
 
     return next();
   };

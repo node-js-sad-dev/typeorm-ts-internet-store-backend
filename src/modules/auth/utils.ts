@@ -18,8 +18,15 @@ export default class AuthUtils {
     return passwordSalt.join("");
   }
 
-  public checkPassword(passwordFromUser: string, passwordFromDb: string, passwordSalt: string) {
-    const hashedPasswordFromUser = this.hashPassword(passwordFromUser, passwordSalt);
+  public checkPassword(
+    passwordFromUser: string,
+    passwordFromDb: string,
+    passwordSalt: string
+  ) {
+    const hashedPasswordFromUser = this.hashPassword(
+      passwordFromUser,
+      passwordSalt
+    );
 
     return hashedPasswordFromUser === passwordFromDb;
   }

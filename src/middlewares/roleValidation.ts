@@ -9,6 +9,10 @@ export function roleValidation(allowedRoles: Array<UserRole>) {
     const validRole = allowedRoles.includes(req.user.role);
 
     if (validRole) next();
-    else throw new BaseError(403, "You dont have enough rights to call this endpoint");
+    else
+      throw new BaseError(
+        403,
+        "You dont have enough rights to call this endpoint"
+      );
   };
 }

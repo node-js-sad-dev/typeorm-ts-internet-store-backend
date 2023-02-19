@@ -30,7 +30,10 @@ export default class UserController {
 
     const passwordSalt = this.authUtils.generatePasswordSalt();
 
-    const password = this.authUtils.hashPassword(registerFields.password, passwordSalt);
+    const password = this.authUtils.hashPassword(
+      registerFields.password,
+      passwordSalt
+    );
 
     const [user, userError] = await handleAsync(
       this.service.create({
@@ -51,7 +54,9 @@ export default class UserController {
   public delete = async (req: Request): EndpointReturnType => {
     const { id } = req.user;
 
-    const [deleteUser, deleteUserError] = await handleAsync(this.service.delete({ id }));
+    const [deleteUser, deleteUserError] = await handleAsync(
+      this.service.delete({ id })
+    );
 
     if (deleteUserError) throw new BaseError(400, "Delete user error");
 
@@ -65,7 +70,8 @@ export default class UserController {
 
     const updatedUsers = await this.utils.updateUser(id, req.body);
 
-    if (updatedUsers.length === 0) throw new BaseError(400, "User update error");
+    if (updatedUsers.length === 0)
+      throw new BaseError(400, "User update error");
 
     return {
       status: 200,
@@ -87,11 +93,11 @@ export default class UserController {
   };
 
   public get = async (req: Request): EndpointReturnType => {
-    let { page, limit, ...searchOptions } = req.query;
+    const { page, limit, ...searchOptions } = req.query;
 
     const [[result, totalCount], getAndCountError] = await handleAsync(
       this.service.getListAndCountOfUsers(
-        searchOptions as FindOptionsWhere<User>,
+        searchOptions as Partial<User>,
         page ? parseInt(page as string) : 1,
         limit ? parseInt(limit as string) : 10
       )
@@ -109,7 +115,9 @@ export default class UserController {
   };
 
   public getCurrentUser = async (req: Request): EndpointReturnType => {
-    const [user, userError] = await handleAsync(this.service.getOne({ search: { id: req.user.id } }));
+    const [user, userError] = await handleAsync(
+      this.service.getOne({ search: { id: req.user.id } })
+    );
 
     if (userError) throw new BaseError(400, "Get user error");
 
@@ -122,7 +130,9 @@ export default class UserController {
   public getById = async (req: Request): EndpointReturnType => {
     const { id } = req.params;
 
-    const [user, userError] = await handleAsync(this.service.getOne({ search: { id: parseInt(id) } }));
+    const [user, userError] = await handleAsync(
+      this.service.getOne({ search: { id: parseInt(id) } })
+    );
 
     if (userError) throw new BaseError(400, "Get user error");
 

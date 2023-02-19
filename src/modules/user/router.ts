@@ -25,9 +25,23 @@ export default class UserRouter {
   }
 
   private routes() {
-    this.router.delete("/delete", auth, this.validation.deleteUser, requestHandler(this.controller.delete));
-    this.router.post("/register", this.validation.registerUser, requestHandler(this.controller.register));
-    this.router.put("/update", auth, this.validation.updateUser, requestHandler(this.controller.update));
+    this.router.delete(
+      "/delete",
+      auth,
+      this.validation.deleteUser,
+      requestHandler(this.controller.delete)
+    );
+    this.router.post(
+      "/register",
+      this.validation.registerUser,
+      requestHandler(this.controller.register)
+    );
+    this.router.put(
+      "/update",
+      auth,
+      this.validation.updateUser,
+      requestHandler(this.controller.update)
+    );
     this.router.put(
       "/:id/update",
       auth,
@@ -35,7 +49,11 @@ export default class UserRouter {
       this.validation.updateUserByAdmin,
       requestHandler(this.controller.updateByAdmin)
     );
-    this.router.get("/me", auth, requestHandler(this.controller.getCurrentUser));
+    this.router.get(
+      "/me",
+      auth,
+      requestHandler(this.controller.getCurrentUser)
+    );
     this.router.get(
       "/:id",
       auth,
