@@ -41,14 +41,14 @@ export default class UserValidation {
     res: Response,
     next: NextFunction
   ) => {
-    const { body, params } = req;
+    const { body } = req;
 
-    const validationParams = Joi.object({
-      id: Joi.number().required(),
-    }).validate(params);
+    const { id } = req.params;
 
-    if (validationParams.error)
-      throw new BaseError(400, validationParams.error.message);
+    const validationId = Joi.number().required().validate(id);
+
+    if (validationId.error)
+      throw new BaseError(400, validationId.error.message);
 
     const validationBody = Joi.object({
       name: Joi.string(),
@@ -67,11 +67,9 @@ export default class UserValidation {
   };
 
   public getUserById = (req: Request, res: Response, next: NextFunction) => {
-    const { params } = req;
+    const { id } = req.params;
 
-    const validation = Joi.object({
-      id: Joi.number().required(),
-    }).validate(params);
+    const validation = Joi.number().required().validate(id);
 
     if (validation.error) throw new BaseError(400, validation.error.message);
 
@@ -82,8 +80,8 @@ export default class UserValidation {
     const { query } = req;
 
     const validation = Joi.object({
-      page: Joi.number().default(1).min(1),
-      limit: Joi.number().default(10).min(1),
+      page: Joi.number().min(1),
+      limit: Joi.number().min(1),
       name: Joi.string(),
       lastName: Joi.string(),
       address: Joi.string(),
@@ -98,11 +96,9 @@ export default class UserValidation {
   };
 
   public deleteUser = (req: Request, res: Response, next: NextFunction) => {
-    const { params } = req;
+    const { id } = req.params;
 
-    const validation = Joi.object({
-      id: Joi.number().required(),
-    }).validate(params);
+    const validation = Joi.number().required().validate(id);
 
     if (validation.error) throw new BaseError(400, validation.error.message);
 

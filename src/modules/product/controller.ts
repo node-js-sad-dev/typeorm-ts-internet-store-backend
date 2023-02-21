@@ -2,9 +2,7 @@ import ProductService from "./service";
 import { Request } from "express";
 import { EndpointReturnType } from "../../core/types/router";
 import { handleAsync } from "../../utils/handleAsync";
-import { User } from "../user/model";
 import BaseError from "../../core/errors/BaseError";
-import { Product } from "./model";
 import { TProductGetListSearchOptions } from "./type";
 
 export default class ProductController {
@@ -33,6 +31,75 @@ export default class ProductController {
         result,
         totalCount,
       },
+    };
+  };
+
+  public getById = async (req: Request): EndpointReturnType => {
+    const { id } = req.params;
+
+    const [result, getError] = await handleAsync(
+      this.service.getOne({
+        search: { id: parseInt(id) },
+        relations: {
+          categories: true,
+          specs: true,
+        },
+      })
+    );
+
+    if (getError) throw new BaseError(400, "Get user error");
+
+    if (!result) throw new BaseError(404, "Product not found");
+
+    return {
+      status: 200,
+      payload: result,
+    };
+  };
+
+  public create = async (req: Request): EndpointReturnType => {
+    const [result, createError] = await handleAsync(
+      this.service.create(req.body)
+    );
+
+    if (createError) throw new BaseError(400, "Create user error");
+
+    return {
+      status: 201,
+      payload: result,
+    };
+  };
+
+  public delete = async (req: Request): EndpointReturnType => {
+    const { id } = req.params;
+
+    const [result, deleteError] = await handleAsync(
+      this.service.delete({ id: parseInt(id) })
+    );
+
+    if (deleteError) throw new BaseError(400, "Delete user error");
+
+    return {
+      status: 200,
+      payload: result,
+    };
+  };
+
+  public update = async (req: Request): EndpointReturnType => {
+    const { id } = req.params;
+
+    const [result, updateError] = await handleAsync(
+      this.service.update({
+        search: { id: parseInt(id) },
+        update: req.body,
+      })
+    );
+
+    if (updateError) throw new BaseError(400, "Update user error");
+
+    return {
+      status: 200,
+      payload: result,
     };
   };
 }
