@@ -9,6 +9,7 @@ import { AppDataSource } from "./src/db";
 import RootRouter from "./src/root.router";
 import { errorHandler, routeNotFound } from "./src/middlewares/errorHandler";
 import { UserObject } from "./src/core/types/router";
+import ProductService from "./src/modules/product/service";
 
 declare global {
   namespace Express {

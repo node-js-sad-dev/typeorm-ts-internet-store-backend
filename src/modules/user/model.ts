@@ -8,7 +8,6 @@ import {
 } from "typeorm";
 import { Order } from "../order/model";
 import { WatchedProducts } from "../watchedProducts/model";
-import { UserRole } from "./type";
 
 @Entity()
 export class User {
@@ -35,9 +34,6 @@ export class User {
 
   @Column()
   passwordSalt: string;
-
-  @Column({ enum: UserRole, default: UserRole.USER })
-  role: UserRole;
 
   @CreateDateColumn()
   createdAt: Date;

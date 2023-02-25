@@ -1,4 +1,4 @@
-import { NextFunction, Response, Request } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import BaseError from "../core/errors/BaseError";
@@ -8,6 +8,8 @@ import { handleAsync } from "../utils/handleAsync";
 
 import { default as TokenService } from "../modules/token/service";
 import { default as UserService } from "../modules/user/service";
+import { UserRole } from "../modules/auth/type";
+import WorkerService from "../modules/worker/service";
 
 export function getToken(authHeader: string) {
   const splitToken = authHeader.split(" ");
@@ -45,13 +47,33 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
 
   if (expiredToken) throw new BaseError(401, "Expired token");
 
-  const [userExist, userExistError] = await handleAsync(
-    new UserService().exist({ id: userObj.id })
-  );
+  let entityExist: boolean, entityExistError;
 
-  if (userExistError) throw new BaseError(400, "Check if user exist error");
+  switch (userObj.role) {
+    case UserRole.USER:
+      [entityExist, entityExistError] = await handleAsync(
+        new UserService().exist({ id: userObj.id })
+      );
 
-  if (!userExist) throw new BaseError(404, "User not found");
+      if (entityExistError)
+        throw new BaseError(400, "Check if user exist error");
+
+      if (!entityExist) throw new BaseError(404, "User not found");
+
+      break;
+    case UserRole.ADMIN:
+    case UserRole.WORKER:
+      [entityExist, entityExistError] = await handleAsync(
+        new WorkerService().exist({ id: userObj.id })
+      );
+
+      if (entityExistError)
+        throw new BaseError(400, "Check if worker exist error");
+
+      if (!entityExist) throw new BaseError(404, "Worker not found");
+
+      break;
+  }
 
   req.user = userObj;
 

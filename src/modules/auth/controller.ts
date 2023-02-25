@@ -10,6 +10,7 @@ import jwt from "jsonwebtoken";
 import { getToken } from "../../middlewares/auth";
 
 import { Request } from "express";
+import { UserRole } from "./type";
 
 export default class AuthController {
   private service: UserService;
@@ -24,7 +25,7 @@ export default class AuthController {
     this.utils = new AuthUtils();
   }
 
-  public login = async (req: Request): EndpointReturnType => {
+  public loginUser = async (req: Request): EndpointReturnType => {
     const { login, password } = req.body;
 
     const [user, userError] = await handleAsync(
@@ -44,7 +45,7 @@ export default class AuthController {
     if (!validPassword) throw new BaseError(403, "Wrong password");
 
     const token = jwt.sign(
-      { id: user.id, role: user.role },
+      { id: user.id, role: UserRole.USER },
       process.env.JWT_SECRET as string
     );
 

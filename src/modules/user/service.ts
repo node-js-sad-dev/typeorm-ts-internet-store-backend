@@ -41,9 +41,6 @@ export default class UserService extends MainService<User> {
         email: `%${options.email}%`,
       });
 
-    if (options.role)
-      queryBuilder.andWhere("user.role = :role", { role: options.role });
-
     if (options.address)
       queryBuilder.andWhere("user.address ILIKE :address", {
         address: `%${options.address}%`,

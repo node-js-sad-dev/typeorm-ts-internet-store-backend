@@ -1,4 +1,4 @@
-import { UserRole } from "../modules/user/type";
+import { UserRole } from "../modules/auth/type";
 import { NextFunction, Request, Response } from "express";
 import BaseError from "../core/errors/BaseError";
 

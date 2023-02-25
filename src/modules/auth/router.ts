@@ -27,7 +27,7 @@ export default class AuthRouter {
     this.router.post(
       "/login",
       this.validator.loginUser,
-      requestHandler(this.controller.login)
+      requestHandler(this.controller.loginUser)
     );
 
     this.router.post("/logout", auth, requestHandler(this.controller.logout));
