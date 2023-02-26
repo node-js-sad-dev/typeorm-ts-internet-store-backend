@@ -47,30 +47,28 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
 
   if (expiredToken) throw new BaseError(401, "Expired token");
 
-  let entityExist: boolean, entityExistError;
-
   switch (userObj.role) {
     case UserRole.USER:
-      [entityExist, entityExistError] = await handleAsync(
+      const [userExist, userExistError] = await handleAsync(
         new UserService().exist({ id: userObj.id })
       );
 
-      if (entityExistError)
-        throw new BaseError(400, "Check if user exist error");
+      if (userExistError) throw new BaseError(400, "Check if user exist error");
 
-      if (!entityExist) throw new BaseError(404, "User not found");
+      if (!userExist) throw new BaseError(404, "User not found");
 
       break;
     case UserRole.ADMIN:
     case UserRole.WORKER:
-      [entityExist, entityExistError] = await handleAsync(
-        new WorkerService().exist({ id: userObj.id })
+      const [worker, workerError] = await handleAsync(
+        new WorkerService().getOne({ search: { id: userObj.id } })
       );
 
-      if (entityExistError)
-        throw new BaseError(400, "Check if worker exist error");
+      if (workerError) throw new BaseError(400, "Check if worker exist error");
 
-      if (!entityExist) throw new BaseError(404, "Worker not found");
+      if (!worker) throw new BaseError(404, "Worker not found");
+
+      if (worker.isDeleted) throw new BaseError(404, "Worker deleted");
 
       break;
   }

@@ -17,4 +17,7 @@ export default class Worker {
 
   @Column({ type: "enum", enum: UserRole, default: UserRole.WORKER })
   role: UserRole;
+
+  @Column()
+  isDeleted: boolean;
 }
