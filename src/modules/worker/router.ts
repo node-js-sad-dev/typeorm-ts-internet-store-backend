@@ -24,7 +24,7 @@ export default class WorkerRouter {
       "/",
       auth,
       roleValidation([UserRole.ADMIN]),
-      this.controller.create
+      this.controller.register
     );
     this.router.put("/:id", this.controller.update);
     this.router.delete("/:id", this.controller.delete);

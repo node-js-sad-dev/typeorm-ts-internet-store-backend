@@ -1,6 +1,6 @@
 export enum ProductSpecType {
-  NUMBER,
-  STRING,
-  OBJECT,
-  BOOLEAN,
+  NUMBER = "number",
+  STRING = "string",
+  OBJECT = "object",
+  BOOLEAN = "bool",
 }

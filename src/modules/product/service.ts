@@ -15,8 +15,8 @@ export default class ProductService extends MainService<Product> {
     const queryBuilder = this.repository.createQueryBuilder("product");
 
     queryBuilder
-      .leftJoin("product.specs", "specs")
-      .leftJoin("product.categories", "categories");
+      .leftJoinAndSelect("product.specs", "specs")
+      .leftJoinAndSelect("product.categories", "categories");
 
     if (search.name)
       queryBuilder.andWhere("product.name ILIKE :name", {

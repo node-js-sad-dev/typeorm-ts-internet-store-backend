@@ -5,6 +5,7 @@ import ProductValidation from "./validation";
 import { auth } from "../../middlewares/auth";
 import { roleValidation } from "../../middlewares/roleValidation";
 import { UserRole } from "../auth/type";
+import { requestHandler } from "../../middlewares/requestHandler";
 
 export default class ProductRouter {
   private controller: ProductController;
@@ -24,32 +25,36 @@ export default class ProductRouter {
   }
 
   private routes() {
-    this.router.get("", this.validator.getListOfProducts, this.controller.get);
+    this.router.get(
+      "",
+      this.validator.getListOfProducts,
+      requestHandler(this.controller.get)
+    );
     this.router.get(
       "/:id",
       this.validator.getProductById,
-      this.controller.getById
+      requestHandler(this.controller.getById)
     );
     this.router.post(
       "",
       auth,
       roleValidation([UserRole.ADMIN]),
       this.validator.createProduct,
-      this.controller.create
+      requestHandler(this.controller.create)
     );
     this.router.put(
       "/:id",
       auth,
       roleValidation([UserRole.ADMIN]),
       this.validator.updateProduct,
-      this.controller.update
+      requestHandler(this.controller.update)
     );
     this.router.delete(
       "/:id",
       auth,
       roleValidation([UserRole.ADMIN]),
       this.validator.deleteProduct,
-      this.controller.delete
+      requestHandler(this.controller.delete)
     );
   }
 }

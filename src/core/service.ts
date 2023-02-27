@@ -7,7 +7,6 @@ import {
 } from "typeorm";
 import { TGetListArgs, TGetOneArgs } from "./types/service";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import UserService from "../modules/user/service";
 import { handleAsync } from "../utils/handleAsync";
 
 export default class MainService<T extends ObjectLiteral> {
@@ -103,12 +102,3 @@ export default class MainService<T extends ObjectLiteral> {
     return this.repository.exist({ where: search });
   };
 }
-
-// setTimeout(async () => {
-//   console.log(
-//     await new UserService().update({
-//       search: { id: 6 },
-//       update: { address: "Улица Пушкина дом Колотушкина" },
-//     })
-//   );
-// }, 1000);
