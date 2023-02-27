@@ -7,7 +7,7 @@ export default class UserService extends MainService<User> {
     super("User");
   }
 
-  public getUserByLogin = async (login: string) => {
+  public getByLogin = async (login: string) => {
     return this.repository
       .createQueryBuilder("user")
       .where("user.phone = :login OR user.email = :login", { login })

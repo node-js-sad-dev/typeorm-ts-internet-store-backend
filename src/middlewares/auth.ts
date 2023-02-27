@@ -61,7 +61,10 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
     case UserRole.ADMIN:
     case UserRole.WORKER:
       const [worker, workerError] = await handleAsync(
-        new WorkerService().getOne({ search: { id: userObj.id } })
+        new WorkerService().getOne({
+          search: { id: userObj.id },
+          select: { isDeleted: true },
+        })
       );
 
       if (workerError) throw new BaseError(400, "Check if worker exist error");

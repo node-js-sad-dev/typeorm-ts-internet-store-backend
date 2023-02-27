@@ -11,15 +11,18 @@ import { getToken } from "../../middlewares/auth";
 
 import { Request } from "express";
 import { UserRole } from "./type";
+import WorkerService from "../worker/service";
 
 export default class AuthController {
-  private service: UserService;
+  private userService: UserService;
+  private workerService: WorkerService;
   private tokenService: TokenService;
 
   private utils: AuthUtils;
 
   constructor() {
-    this.service = new UserService();
+    this.userService = new UserService();
+    this.workerService = new WorkerService();
     this.tokenService = new TokenService();
 
     this.utils = new AuthUtils();
@@ -29,7 +32,7 @@ export default class AuthController {
     const { login, password } = req.body;
 
     const [user, userError] = await handleAsync(
-      this.service.getUserByLogin(login)
+      this.userService.getByLogin(login)
     );
 
     if (userError) throw new BaseError(400, "Check if user exist error");
@@ -53,6 +56,39 @@ export default class AuthController {
       status: 200,
       payload: {
         user,
+        token,
+      },
+    };
+  };
+
+  public loginWorker = async (req: Request): EndpointReturnType => {
+    const { login, password } = req.body;
+
+    const [worker, workerError] = await handleAsync(
+      this.workerService.getByLogin(login)
+    );
+
+    if (workerError) throw new BaseError(400, "Check if worker exist error");
+
+    if (!worker) throw new BaseError(404, "Worker with such login not found");
+
+    const validPassword = this.utils.checkPassword(
+      password,
+      worker.password,
+      worker.passwordSalt
+    );
+
+    if (!validPassword) throw new BaseError(403, "Wrong password");
+
+    const token = jwt.sign(
+      { id: worker.id, role: worker.role },
+      process.env.JWT_SECRET as string
+    );
+
+    return {
+      status: 200,
+      payload: {
+        user: worker,
         token,
       },
     };

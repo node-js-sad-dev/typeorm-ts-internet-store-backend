@@ -10,7 +10,7 @@ import { Category } from "./modules/category/model";
 import { WatchedProducts } from "./modules/watchedProducts/model";
 import { Wishlist } from "./modules/wishlist/model";
 import { Token } from "./modules/token/model";
-import Worker from "./modules/worker/model";
+import { Worker } from "./modules/worker/model";
 
 const {
   DB_HOST = "localhost",

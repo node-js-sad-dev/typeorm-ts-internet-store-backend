@@ -5,7 +5,7 @@ import BaseError from "../../core/errors/BaseError";
 import { Request } from "express";
 
 export default class AuthValidation {
-  public loginUser = (req: Request, res: Response, next: NextFunction) => {
+  public login = (req: Request, res: Response, next: NextFunction) => {
     const { body } = req;
 
     const validation = Joi.object({

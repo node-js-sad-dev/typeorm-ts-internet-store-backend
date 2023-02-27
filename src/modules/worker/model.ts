@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { UserRole } from "../auth/type";
 
 @Entity()
-export default class Worker {
+export class Worker {
   @PrimaryGeneratedColumn()
   id: number;
 
