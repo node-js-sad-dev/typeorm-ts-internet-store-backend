@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { User } from "../user/model";
-import { OrderProduct } from "../orderProducts/model";
+import { User } from "./user";
+import { OrderProduct } from "./orderProducts";
 
 @Entity()
 export class Order {

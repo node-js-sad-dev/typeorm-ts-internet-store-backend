@@ -6,8 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Product } from "../product/model";
-import { ProductSpecType } from "./type";
+import { Product } from "./product";
+import { ProductSpecType } from "../modules/productSpecs/type";
 
 @Entity()
 export class ProductSpecs {

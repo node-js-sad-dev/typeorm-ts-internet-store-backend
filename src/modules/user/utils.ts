@@ -1,5 +1,5 @@
 import UserService from "./service";
-import { User } from "./model";
+import { User } from "../../entity/user";
 import BaseError from "../../core/errors/BaseError";
 import { handleAsync } from "../../utils/handleAsync";
 

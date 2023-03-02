@@ -1,7 +1,7 @@
 import WorkerController from "./controller";
 import { Router as ExpressRouter } from "express";
-import { roleValidation } from "../../middlewares/roleValidation";
-import { auth } from "../../middlewares/auth";
+import { roleValidation } from "../../middleware/roleValidation";
+import { auth } from "../../middleware/auth";
 import { UserRole } from "../auth/type";
 
 export default class WorkerRouter {

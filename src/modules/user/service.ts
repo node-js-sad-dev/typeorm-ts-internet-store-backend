@@ -1,5 +1,5 @@
 import MainService from "../../core/service";
-import { User } from "./model";
+import { User } from "../../entity/user";
 import { FindOptionsWhere } from "typeorm";
 
 export default class UserService extends MainService<User> {

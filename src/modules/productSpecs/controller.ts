@@ -9,4 +9,8 @@ export default class ProductSpecsController {
   }
 
   public getList = async (req: Request) => {};
+  public getOne = async (req: Request) => {};
+  public create = async (req: Request) => {};
+  public update = async (req: Request) => {};
+  public delete = async (req: Request) => {};
 }

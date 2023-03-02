@@ -1,4 +1,4 @@
-import { Product } from "./model";
+import { Product } from "../../entity/product";
 
 export type TProductGetListSearchOptions = Partial<
   Product & {

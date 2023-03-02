@@ -1,9 +1,9 @@
 import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../user/model";
-import { Product } from "../product/model";
+import { User } from "./user";
+import { Product } from "./product";
 
 @Entity()
-export class Wishlist {
+export class WatchedProducts {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -3,10 +3,10 @@ import { Router as ExpressRouter } from "express";
 import AuthController from "./controller";
 import AuthValidator from "./validation";
 
-import { requestHandler } from "../../middlewares/requestHandler";
-import { auth } from "../../middlewares/auth";
-import { User } from "../user/model";
-import { Worker } from "../worker/model";
+import { requestHandler } from "../../middleware/requestHandler";
+import { auth } from "../../middleware/auth";
+import { User } from "../../entity/user";
+import { Worker } from "../../entity/worker";
 
 export default class AuthRouter {
   public router: ExpressRouter;

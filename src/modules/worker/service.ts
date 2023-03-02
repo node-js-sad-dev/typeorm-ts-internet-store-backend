@@ -1,5 +1,5 @@
 import MainService from "../../core/service";
-import { Worker } from "./model";
+import { Worker } from "../../entity/worker";
 
 export default class WorkerService extends MainService<Worker> {
   constructor() {

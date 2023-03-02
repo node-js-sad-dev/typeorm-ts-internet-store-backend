@@ -7,7 +7,7 @@ import cors from "cors";
 
 import { AppDataSource } from "./src/db";
 import RootRouter from "./src/root.router";
-import { errorHandler, routeNotFound } from "./src/middlewares/errorHandler";
+import { errorHandler, routeNotFound } from "./src/middleware/errorHandler";
 import { UserObject } from "./src/core/types/router";
 
 declare global {

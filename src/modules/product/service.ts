@@ -1,5 +1,5 @@
 import MainService from "../../core/service";
-import { Product } from "./model";
+import { Product } from "../../entity/product";
 import { TProductGetListSearchOptions } from "./type";
 
 export default class ProductService extends MainService<Product> {

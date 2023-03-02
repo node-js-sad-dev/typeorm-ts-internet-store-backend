@@ -1,5 +1,5 @@
 import ProductService from "./service";
-import { Product } from "./model";
+import { Product } from "../../entity/product";
 
 export default class ProductUtils {
   private service: ProductService;

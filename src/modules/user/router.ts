@@ -1,10 +1,10 @@
 import UserController from ".//controller";
 
 import { Router as ExpressRouter } from "express";
-import { auth } from "../../middlewares/auth";
+import { auth } from "../../middleware/auth";
 import UserValidation from "./validation";
-import { requestHandler } from "../../middlewares/requestHandler";
-import { roleValidation } from "../../middlewares/roleValidation";
+import { requestHandler } from "../../middleware/requestHandler";
+import { roleValidation } from "../../middleware/roleValidation";
 import { UserRole } from "../auth/type";
 
 export default class UserRouter {

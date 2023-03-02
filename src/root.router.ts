@@ -4,8 +4,8 @@ import { default as AuthRouter } from "./modules/auth/router";
 import UserRouter from "./modules/user/router";
 import ProductRouter from "./modules/product/router";
 import WorkerRouter from "./modules/worker/router";
-import { User } from "./modules/user/model";
-import { Worker } from "./modules/worker/model";
+import { User } from "./entity/user";
+import { Worker } from "./entity/worker";
 
 export default class RootRouter {
   public router: ExpressRouter;

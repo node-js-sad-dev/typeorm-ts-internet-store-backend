@@ -7,10 +7,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { ProductSpecs } from "../productSpecs/model";
-import { OrderProduct } from "../orderProducts/model";
-import { Category } from "../category/model";
-import { WatchedProducts } from "../watchedProducts/model";
+import { ProductSpecs } from "./productSpecs";
+import { OrderProduct } from "./orderProducts";
+import { Category } from "./category";
+import { WatchedProducts } from "./watchedProducts";
+import { CartProduct } from "./cartProduct";
 
 @Entity()
 export class Product {
@@ -46,4 +47,7 @@ export class Product {
 
   @ManyToMany(() => Category, (category) => category.products)
   categories: Category[];
+
+  @OneToMany(() => CartProduct, (cartProduct) => cartProduct.product)
+  cartProducts: CartProduct[];
 }

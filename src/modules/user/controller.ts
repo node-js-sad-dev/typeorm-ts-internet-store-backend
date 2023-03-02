@@ -8,7 +8,7 @@ import AuthUtils from "../auth/utils";
 import { Request } from "express";
 import UserUtils from "./utils";
 import { FindOptionsWhere } from "typeorm";
-import { User } from "./model";
+import { User } from "../../entity/user";
 
 export default class UserController {
   private service: UserService;

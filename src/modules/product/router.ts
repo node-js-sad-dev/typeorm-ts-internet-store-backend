@@ -2,10 +2,10 @@ import ProductController from "./controller";
 
 import { Router as ExpressRouter } from "express";
 import ProductValidation from "./validation";
-import { auth } from "../../middlewares/auth";
-import { roleValidation } from "../../middlewares/roleValidation";
+import { auth } from "../../middleware/auth";
+import { roleValidation } from "../../middleware/roleValidation";
 import { UserRole } from "../auth/type";
-import { requestHandler } from "../../middlewares/requestHandler";
+import { requestHandler } from "../../middleware/requestHandler";
 
 export default class ProductRouter {
   private controller: ProductController;

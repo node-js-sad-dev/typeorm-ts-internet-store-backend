@@ -7,7 +7,7 @@ import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
 
 import jwt from "jsonwebtoken";
-import { getToken } from "../../middlewares/auth";
+import { getToken } from "../../middleware/auth";
 
 import { Request } from "express";
 import { UserRole } from "./type";

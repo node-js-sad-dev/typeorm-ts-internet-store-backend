@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { UserRole } from "../auth/type";
+import { UserRole } from "../modules/auth/type";
 
 @Entity()
 export class Worker {

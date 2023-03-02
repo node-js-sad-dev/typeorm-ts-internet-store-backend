@@ -1,5 +1,5 @@
 import MainService from "../../core/service";
-import { ProductSpecs } from "./model";
+import { ProductSpecs } from "../../entity/productSpecs";
 
 export default class ProductSpecsService extends MainService<ProductSpecs> {
   constructor() {

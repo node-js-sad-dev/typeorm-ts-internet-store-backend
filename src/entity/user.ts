@@ -6,8 +6,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Order } from "../order/model";
-import { WatchedProducts } from "../watchedProducts/model";
+import { Order } from "./order";
+import { WatchedProducts } from "./watchedProducts";
+import { CartProduct } from "./cartProduct";
 
 @Entity()
 export class User {
@@ -46,4 +47,7 @@ export class User {
 
   @OneToMany(() => WatchedProducts, (watchedProducts) => watchedProducts.user)
   watchedProducts: WatchedProducts[];
+
+  @OneToMany(() => CartProduct, (cartProduct) => cartProduct.user)
+  cartProducts: CartProduct[];
 }
