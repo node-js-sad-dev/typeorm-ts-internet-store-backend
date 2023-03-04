@@ -4,8 +4,8 @@ import { Router as ExpressRouter } from "express";
 import ProductValidation from "./validation";
 import { auth } from "../../middleware/auth";
 import { roleValidation } from "../../middleware/roleValidation";
-import { UserRole } from "../auth/type";
 import { requestHandler } from "../../middleware/requestHandler";
+import { UserRole } from "../../core/types/auth";
 
 export default class ProductRouter {
   private controller: ProductController;

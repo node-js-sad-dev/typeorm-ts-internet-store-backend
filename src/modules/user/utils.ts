@@ -2,8 +2,7 @@ import UserService from "./service";
 import { User } from "../../entity/user";
 import BaseError from "../../core/errors/BaseError";
 import { handleAsync } from "../../utils/handleAsync";
-
-import AuthUtils from "../auth/utils";
+import AuthUtils from "../../utils/auth";
 
 export default class UserUtils {
   private service: UserService;

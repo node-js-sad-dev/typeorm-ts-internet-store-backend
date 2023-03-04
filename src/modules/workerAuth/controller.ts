@@ -1,64 +1,27 @@
-import UserService from "../user/service";
-
+import WorkerAuthService from "./service";
+import AuthUtils from "../../utils/auth";
+import WorkerService from "../worker/service";
+import { Request } from "express";
 import { EndpointReturnType } from "../../core/types/router";
-import AuthUtils from "./utils";
 import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
-
 import jwt from "jsonwebtoken";
 import { getToken } from "../../middleware/auth";
 
-import { Request } from "express";
-import { UserRole } from "./type";
-import WorkerService from "../worker/service";
-
-export default class AuthController {
-  private userService: UserService;
-  private workerService: WorkerService;
-
+export default class WorkerAuthController {
+  private service: WorkerAuthService;
   private utils: AuthUtils;
 
-  constructor() {
-    this.userService = new UserService();
-    this.workerService = new WorkerService();
+  private workerService: WorkerService;
 
+  constructor() {
+    this.service = new WorkerAuthService();
     this.utils = new AuthUtils();
+
+    this.workerService = new WorkerService();
   }
 
-  public loginUser = async (req: Request): EndpointReturnType => {
-    const { login, password } = req.body;
-
-    const [user, userError] = await handleAsync(
-      this.userService.getByLogin(login)
-    );
-
-    if (userError) throw new BaseError(400, "Check if user exist error");
-
-    if (!user) throw new BaseError(404, "User with such login not found");
-
-    const validPassword = this.utils.checkPassword(
-      password,
-      user.password,
-      user.passwordSalt
-    );
-
-    if (!validPassword) throw new BaseError(403, "Wrong password");
-
-    const token = jwt.sign(
-      { id: user.id, role: UserRole.USER },
-      process.env.JWT_SECRET as string
-    );
-
-    return {
-      status: 200,
-      payload: {
-        user,
-        token,
-      },
-    };
-  };
-
-  public loginWorker = async (req: Request): EndpointReturnType => {
+  public login = async (req: Request): EndpointReturnType => {
     const { login, password } = req.body;
 
     const [worker, workerError] = await handleAsync(
@@ -82,10 +45,16 @@ export default class AuthController {
       process.env.JWT_SECRET as string
     );
 
+    const [workerAuth, workerAuthError] = await handleAsync(
+      this.service.create({ workerId: worker.id, token: token })
+    );
+
+    if (workerAuthError) throw new BaseError(400, "Worker auth create error");
+
     return {
       status: 200,
       payload: {
-        user: worker,
+        worker,
         token,
       },
     };
@@ -95,7 +64,10 @@ export default class AuthController {
     const { token } = getToken(req.headers.authorization as string);
 
     try {
-      // await this.tokenService.create({ token: token });
+      await this.service.update({
+        search: { token: token },
+        update: { isExpired: true },
+      });
     } catch (e) {
       throw new BaseError(400, "Token write to db error");
     }

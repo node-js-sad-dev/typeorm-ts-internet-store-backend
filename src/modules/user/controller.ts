@@ -3,12 +3,10 @@ import { EndpointReturnType } from "../../core/types/router";
 import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
 
-import AuthUtils from "../auth/utils";
-
 import { Request } from "express";
 import UserUtils from "./utils";
-import { FindOptionsWhere } from "typeorm";
 import { User } from "../../entity/user";
+import AuthUtils from "../../utils/auth";
 
 export default class UserController {
   private service: UserService;

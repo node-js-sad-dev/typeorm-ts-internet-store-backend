@@ -14,4 +14,7 @@ export class WorkerAuth {
 
   @ManyToOne(() => Worker, (worker) => worker.auths)
   worker: Worker;
+
+  @Column()
+  workerId: number;
 }

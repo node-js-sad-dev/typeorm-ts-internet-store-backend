@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { UserRole } from "../modules/auth/type";
 import { WorkerAuth } from "./workerAuth";
+import { UserRole } from "../core/types/auth";
 
 @Entity()
 export class Worker {

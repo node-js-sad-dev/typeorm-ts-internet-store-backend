@@ -1,6 +1,6 @@
-import { UserRole } from "../modules/auth/type";
 import { NextFunction, Request, Response } from "express";
 import BaseError from "../core/errors/BaseError";
+import { UserRole } from "../core/types/auth";
 
 export function roleValidation(allowedRoles: Array<UserRole>) {
   return function (req: Request, res: Response, next: NextFunction) {

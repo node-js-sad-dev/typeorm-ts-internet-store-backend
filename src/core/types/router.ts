@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { UserRole } from "../../modules/auth/type";
+import { UserRole } from "./auth";
 
 export type UserObject = {
   id: number;

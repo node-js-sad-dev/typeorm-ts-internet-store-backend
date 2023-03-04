@@ -7,8 +7,8 @@ import { UserObject } from "../core/types/router";
 import { handleAsync } from "../utils/handleAsync";
 
 import UserService from "../modules/user/service";
-import { UserRole } from "../modules/auth/type";
 import WorkerService from "../modules/worker/service";
+import { UserRole } from "../core/types/auth";
 
 export function getToken(authHeader: string) {
   const splitToken = authHeader.split(" ");

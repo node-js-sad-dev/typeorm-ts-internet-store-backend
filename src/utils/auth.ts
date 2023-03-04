@@ -1,5 +1,5 @@
 import { createHmac } from "crypto";
-import { getRandomInt } from "../../utils/random";
+import { getRandomInt } from "./random";
 
 export default class AuthUtils {
   private readonly PASSWORD_SALT_LENGTH = 6;

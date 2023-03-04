@@ -5,7 +5,7 @@ import { auth } from "../../middleware/auth";
 import UserValidation from "./validation";
 import { requestHandler } from "../../middleware/requestHandler";
 import { roleValidation } from "../../middleware/roleValidation";
-import { UserRole } from "../auth/type";
+import { UserRole } from "../../core/types/auth";
 
 export default class UserRouter {
   public router: ExpressRouter;
