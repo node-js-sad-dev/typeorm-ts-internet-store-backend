@@ -6,8 +6,7 @@ import { UserObject } from "../core/types/router";
 
 import { handleAsync } from "../utils/handleAsync";
 
-import { default as TokenService } from "../modules/token/service";
-import { default as UserService } from "../modules/user/service";
+import UserService from "../modules/user/service";
 import { UserRole } from "../modules/auth/type";
 import WorkerService from "../modules/worker/service";
 
@@ -38,14 +37,15 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
     throw new BaseError(401, "Invalid token");
   }
 
-  const [expiredToken, expiredTokenError] = await handleAsync(
-    new TokenService().getOne({ search: { token: token } })
-  );
-
-  if (expiredTokenError)
-    throw new BaseError(401, "Check if token expired failed");
-
-  if (expiredToken) throw new BaseError(401, "Expired token");
+  // todo -> change logic to check userAuth or workerAuth tables to check if token expired
+  // const [expiredToken, expiredTokenError] = await handleAsync(
+  //   new TokenService().getOne({ search: { token: token } })
+  // );
+  //
+  // if (expiredTokenError)
+  //   throw new BaseError(401, "Check if token expired failed");
+  //
+  // if (expiredToken) throw new BaseError(401, "Expired token");
 
   switch (userObj.role) {
     case UserRole.USER:

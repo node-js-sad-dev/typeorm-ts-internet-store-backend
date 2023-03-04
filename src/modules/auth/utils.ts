@@ -7,7 +7,7 @@ export default class AuthUtils {
   public generatePasswordSalt() {
     const alphabet = "qwertyuiopasdfghjklzxcvbnm1234567890";
 
-    const passwordSalt = [];
+    const passwordSalt: Array<string> = [];
 
     for (let i = 0; i < this.PASSWORD_SALT_LENGTH; i++) {
       const index = getRandomInt(0, alphabet.length - 1);

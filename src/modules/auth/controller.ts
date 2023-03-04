@@ -1,5 +1,4 @@
 import UserService from "../user/service";
-import TokenService from "../token/service";
 
 import { EndpointReturnType } from "../../core/types/router";
 import AuthUtils from "./utils";
@@ -16,14 +15,12 @@ import WorkerService from "../worker/service";
 export default class AuthController {
   private userService: UserService;
   private workerService: WorkerService;
-  private tokenService: TokenService;
 
   private utils: AuthUtils;
 
   constructor() {
     this.userService = new UserService();
     this.workerService = new WorkerService();
-    this.tokenService = new TokenService();
 
     this.utils = new AuthUtils();
   }
@@ -98,7 +95,7 @@ export default class AuthController {
     const { token } = getToken(req.headers.authorization as string);
 
     try {
-      await this.tokenService.create({ token: token });
+      // await this.tokenService.create({ token: token });
     } catch (e) {
       throw new BaseError(400, "Token write to db error");
     }

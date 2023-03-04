@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserRole } from "../modules/auth/type";
+import { WorkerAuth } from "./workerAuth";
 
 @Entity()
 export class Worker {
@@ -20,4 +21,7 @@ export class Worker {
 
   @Column()
   isDeleted: boolean;
+
+  @OneToMany(() => WorkerAuth, (workerAuth) => workerAuth.worker)
+  auths: WorkerAuth[];
 }

@@ -9,9 +9,10 @@ import { ProductSpecs } from "./entity/productSpecs";
 import { Category } from "./entity/category";
 import { WatchedProducts } from "./entity/watchedProducts";
 import { Wishlist } from "./entity/wishlistProducts";
-import { Token } from "./entity/token";
 import { Worker } from "./entity/worker";
 import { CartProduct } from "./entity/cartProduct";
+import { UserAuth } from "./entity/userAuth";
+import { WorkerAuth } from "./entity/workerAuth";
 
 const {
   DB_HOST = "localhost",
@@ -30,6 +31,7 @@ export const AppDataSource = new DataSource({
   database: DB_NAME,
   entities: [
     User,
+    UserAuth,
     Order,
     OrderProduct,
     Product,
@@ -37,8 +39,8 @@ export const AppDataSource = new DataSource({
     Category,
     WatchedProducts,
     Wishlist,
-    Token,
     Worker,
+    WorkerAuth,
     CartProduct,
   ],
   synchronize: true,
