@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Product } from "./product";
-import { ProductSpecType } from "../modules/productSpecs/type";
+import { ProductSpecType } from "../modules/product/type";
 
 @Entity()
 export class ProductSpecs {

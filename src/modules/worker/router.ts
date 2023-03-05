@@ -3,6 +3,7 @@ import { Router as ExpressRouter } from "express";
 import { roleValidation } from "../../middleware/roleValidation";
 import { auth } from "../../middleware/auth";
 import { UserRole } from "../../core/types/auth";
+import { requestHandler } from "../../middleware/requestHandler";
 
 export default class WorkerRouter {
   private controller: WorkerController;
@@ -18,15 +19,41 @@ export default class WorkerRouter {
   }
 
   private routes() {
-    this.router.get("/", this.controller.getList);
-    this.router.get("/:id", this.controller.getOne);
+    this.router.get(
+      "/me",
+      auth,
+      roleValidation([UserRole.ADMIN, UserRole.WORKER]),
+      requestHandler(this.controller.getMe)
+    );
+    this.router.get(
+      "/",
+      auth,
+      roleValidation([UserRole.ADMIN]),
+      requestHandler(this.controller.getList)
+    );
+    this.router.get(
+      "/:id",
+      auth,
+      roleValidation([UserRole.ADMIN]),
+      requestHandler(this.controller.getOne)
+    );
     this.router.post(
       "/",
       auth,
       roleValidation([UserRole.ADMIN]),
-      this.controller.register
+      requestHandler(this.controller.register)
     );
-    this.router.put("/:id", this.controller.update);
-    this.router.delete("/:id", this.controller.delete);
+    this.router.put(
+      "/:id",
+      auth,
+      roleValidation([UserRole.ADMIN]),
+      requestHandler(this.controller.update)
+    );
+    this.router.delete(
+      "/:id",
+      auth,
+      roleValidation([UserRole.ADMIN]),
+      requestHandler(this.controller.delete)
+    );
   }
 }

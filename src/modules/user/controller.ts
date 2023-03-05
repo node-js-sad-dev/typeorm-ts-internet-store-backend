@@ -94,11 +94,14 @@ export default class UserController {
     const { page, limit, ...searchOptions } = req.query;
 
     const [[result, totalCount], getAndCountError] = await handleAsync(
-      this.service.getListAndCountOfUsers(
-        searchOptions as Partial<User>,
-        page ? parseInt(page as string) : 1,
-        limit ? parseInt(limit as string) : 10
-      )
+      Promise.all([
+        this.service.getListOfUsers(
+          searchOptions as Partial<User>,
+          page ? parseInt(page as string) : 1,
+          limit ? parseInt(limit as string) : 10
+        ),
+        this.service.getCountOfUsers(searchOptions as Partial<User>),
+      ])
     );
 
     if (getAndCountError) throw new BaseError(400, "Get users and count error");

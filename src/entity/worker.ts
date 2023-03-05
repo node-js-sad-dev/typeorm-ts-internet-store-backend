@@ -7,8 +7,17 @@ export class Worker {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  login: string;
+  @Column()
+  name: string;
+
+  @Column()
+  lastName: string;
+
+  @Column({ unique: true, nullable: true })
+  phone: string;
+
+  @Column({ unique: true, nullable: true })
+  email: string;
 
   @Column()
   password: string;

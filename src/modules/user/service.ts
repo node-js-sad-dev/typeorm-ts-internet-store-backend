@@ -1,24 +1,12 @@
 import MainService from "../../core/service";
 import { User } from "../../entity/user";
-import { FindOptionsWhere } from "typeorm";
 
 export default class UserService extends MainService<User> {
   constructor() {
     super("User");
   }
 
-  public getByLogin = async (login: string) => {
-    return this.repository
-      .createQueryBuilder("user")
-      .where("user.phone = :login OR user.email = :login", { login })
-      .getOne();
-  };
-
-  public getListAndCountOfUsers = async (
-    options: Partial<User>,
-    page: number,
-    limit: number
-  ) => {
+  private getListAndCountBuilder = (options: Partial<User>) => {
     const queryBuilder = this.repository.createQueryBuilder("user");
 
     if (options.name)
@@ -46,12 +34,28 @@ export default class UserService extends MainService<User> {
         address: `%${options.address}%`,
       });
 
-    const totalCount = queryBuilder.getCount();
+    return queryBuilder;
+  };
 
-    queryBuilder.skip((page - 1) * limit).take(limit);
+  public getByLogin = async (login: string) => {
+    return this.repository
+      .createQueryBuilder("user")
+      .where("user.phone = :login OR user.email = :login", { login })
+      .getOne();
+  };
 
-    const result = queryBuilder.getMany();
+  public getListOfUsers = async (
+    options: Partial<User>,
+    page: number,
+    limit: number
+  ) => {
+    return this.getListAndCountBuilder(options)
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getMany();
+  };
 
-    return Promise.all([result, totalCount]);
+  public getCountOfUsers = async (options: Partial<User>) => {
+    return this.getListAndCountBuilder(options).getCount();
   };
 }
