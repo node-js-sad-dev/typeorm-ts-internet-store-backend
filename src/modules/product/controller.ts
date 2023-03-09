@@ -5,30 +5,35 @@ import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
 import { TProductGetListSearchOptions } from "./type";
 import ProductUtils from "./utils";
+import DBError from "../../core/errors/DBError";
+import ProductView from "./view";
 
 export default class ProductController {
   private service: ProductService;
-
   private utils: ProductUtils;
+  private view: ProductView;
 
   constructor() {
     this.service = new ProductService();
-
     this.utils = new ProductUtils();
+    this.view = new ProductView();
   }
 
   public get = async (req: Request): EndpointReturnType => {
     const { page, limit, ...searchOptions } = req.query;
 
-    const [[products, totalCount], getAndCountError] = await handleAsync(
-      this.service.getListAndCountOfProducts(
-        page ? parseInt(page as string) : 1,
-        limit ? parseInt(limit as string) : 10,
-        searchOptions as TProductGetListSearchOptions
-      )
-    );
+    const { result: productListAndCount, error: getAndCountError } =
+      await handleAsync(
+        this.service.getListAndCountOfProducts(
+          page ? parseInt(page as string) : 1,
+          limit ? parseInt(limit as string) : 10,
+          searchOptions as TProductGetListSearchOptions
+        )
+      );
 
-    if (getAndCountError) throw new BaseError(400, "Get users and count error");
+    if (getAndCountError) throw new DBError(getAndCountError);
+
+    const [products, totalCount] = productListAndCount!;
 
     const result = this.utils.productsWithFormattedSpecs(products);
 
@@ -44,7 +49,7 @@ export default class ProductController {
   public getById = async (req: Request): EndpointReturnType => {
     const { id } = req.params;
 
-    const [result, getError] = await handleAsync(
+    const { result, error: getError } = await handleAsync(
       this.service.getOne({
         search: { id: parseInt(id) },
         relations: {
@@ -54,7 +59,7 @@ export default class ProductController {
       })
     );
 
-    if (getError) throw new BaseError(400, "Get user error");
+    if (getError) throw new DBError(getError);
 
     if (!result) throw new BaseError(404, "Product not found");
 
@@ -65,11 +70,11 @@ export default class ProductController {
   };
 
   public create = async (req: Request): EndpointReturnType => {
-    const [result, createError] = await handleAsync(
+    const { result, error: createError } = await handleAsync(
       this.service.create(req.body)
     );
 
-    if (createError) throw new BaseError(400, "Create user error");
+    if (createError) throw new DBError(createError);
 
     return {
       status: 201,
@@ -80,11 +85,11 @@ export default class ProductController {
   public delete = async (req: Request): EndpointReturnType => {
     const { id } = req.params;
 
-    const [result, deleteError] = await handleAsync(
+    const { result, error: deleteError } = await handleAsync(
       this.service.delete({ id: parseInt(id) })
     );
 
-    if (deleteError) throw new BaseError(400, "Delete user error");
+    if (deleteError) throw new DBError(deleteError);
 
     return {
       status: 200,
@@ -95,14 +100,14 @@ export default class ProductController {
   public update = async (req: Request): EndpointReturnType => {
     const { id } = req.params;
 
-    const [result, updateError] = await handleAsync(
+    const { result, error: updateError } = await handleAsync(
       this.service.update({
         search: { id: parseInt(id) },
         update: req.body,
       })
     );
 
-    if (updateError) throw new BaseError(400, "Update user error");
+    if (updateError) throw new DBError(updateError);
 
     return {
       status: 200,

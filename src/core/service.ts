@@ -7,7 +7,6 @@ import {
 } from "typeorm";
 import { TGetListArgs, TGetOneArgs } from "./types/service";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
-import { handleAsync } from "../utils/handleAsync";
 
 export default class MainService<T extends ObjectLiteral> {
   protected repository: Repository<T>;
@@ -78,20 +77,14 @@ export default class MainService<T extends ObjectLiteral> {
   }: {
     search: FindOptionsWhere<T>;
     update: QueryDeepPartialEntity<T>;
-  }) => {
-    const [result, resultError] = await handleAsync(
-      this.repository
-        .createQueryBuilder()
-        .update(update)
-        .where(search)
-        .returning("*")
-        .updateEntity(true)
-        .execute()
-    );
-
-    if (resultError) throw new Error("Update error");
-
-    return result.raw;
+  }): Promise<{ raw: T[] }> => {
+    return this.repository
+      .createQueryBuilder()
+      .update(update)
+      .where(search)
+      .returning("*")
+      .updateEntity(true)
+      .execute();
   };
 
   public delete = async (search: FindOptionsWhere<T>) => {

@@ -3,6 +3,7 @@ import { Request } from "express";
 import { EndpointReturnType } from "../../core/types/router";
 import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
+import DBError from "../../core/errors/DBError";
 
 export default class WorkerController {
   private service: WorkerService;
@@ -12,13 +13,13 @@ export default class WorkerController {
   }
 
   public getMe = async (req: Request): EndpointReturnType => {
-    const [worker, workerError] = await handleAsync(
+    const { result: worker, error: workerError } = await handleAsync(
       this.service.getOne({
         search: { id: req.user.id },
       })
     );
 
-    if (workerError) throw new BaseError(400, "Get current worker error");
+    if (workerError) throw new DBError(workerError);
 
     return {
       status: 200,
@@ -39,12 +40,6 @@ export default class WorkerController {
     };
   };
 
-  public register = async (req: Request): EndpointReturnType => {
-    return {
-      status: 200,
-    };
-  };
-
   public update = async (req: Request): EndpointReturnType => {
     return {
       status: 200,
@@ -54,12 +49,11 @@ export default class WorkerController {
   public delete = async (req: Request): EndpointReturnType => {
     const { id } = req.params;
 
-    const [workerExist, workerExistError] = await handleAsync(
+    const { result: workerExist, error: workerExistError } = await handleAsync(
       this.service.exist({ id: parseInt(id) })
     );
 
-    if (workerExistError)
-      throw new BaseError(400, "Error while checking worker exist");
+    if (workerExistError) throw new DBError(workerExistError);
 
     if (!workerExist) throw new BaseError(404, "Worker not found");
 

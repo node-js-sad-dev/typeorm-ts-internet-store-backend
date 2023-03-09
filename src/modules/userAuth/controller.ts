@@ -8,6 +8,9 @@ import BaseError from "../../core/errors/BaseError";
 import jwt from "jsonwebtoken";
 import { getToken } from "../../middleware/auth";
 import { UserRole } from "../../core/types/auth";
+import DBError from "../../core/errors/DBError";
+import NotFoundError from "../../core/errors/NotFoundError";
+import AccessDeniedError from "../../core/errors/AccessDeniedError";
 
 export default class UserAuthController {
   private service: UserAuthService;
@@ -25,13 +28,13 @@ export default class UserAuthController {
   public login = async (req: Request): EndpointReturnType => {
     const { login, password } = req.body;
 
-    const [user, userError] = await handleAsync(
+    const { result: user, error: userError } = await handleAsync(
       this.userService.getByLogin(login)
     );
 
-    if (userError) throw new BaseError(400, "Check if user exist error");
+    if (userError) throw new DBError(userError);
 
-    if (!user) throw new BaseError(404, "User with such login not found");
+    if (!user) throw new NotFoundError("User with such login not found");
 
     const validPassword = this.utils.checkPassword(
       password,
@@ -39,18 +42,18 @@ export default class UserAuthController {
       user.passwordSalt
     );
 
-    if (!validPassword) throw new BaseError(403, "Wrong password");
+    if (!validPassword) throw new AccessDeniedError("Wrong password");
 
     const token = jwt.sign(
       { id: user.id, role: UserRole.USER },
       process.env.JWT_SECRET as string
     );
 
-    const [userAuth, userAuthError] = await handleAsync(
+    const { result: userAuth, error: userAuthError } = await handleAsync(
       this.service.create({ userId: user.id, token: token })
     );
 
-    if (userAuthError) throw new BaseError(400, "User auth create error");
+    if (userAuthError) throw new DBError(userAuthError);
 
     return {
       status: 200,

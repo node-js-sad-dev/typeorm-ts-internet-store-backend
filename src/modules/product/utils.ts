@@ -9,17 +9,6 @@ export default class ProductUtils {
   }
 
   public productsWithFormattedSpecs = (products: Product[]) => {
-    return products.map((product) => {
-      const specs: Record<string, any> = {};
-
-      product.specs.forEach((spec) => {
-        specs[spec.specName] = spec.specValue;
-      });
-
-      return {
-        ...product,
-        specs: specs,
-      };
-    });
+    return products.map((product) => {});
   };
 }

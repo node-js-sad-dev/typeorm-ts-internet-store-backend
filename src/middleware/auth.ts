@@ -9,6 +9,8 @@ import { handleAsync } from "../utils/handleAsync";
 import UserService from "../modules/user/service";
 import WorkerService from "../modules/worker/service";
 import { UserRole } from "../core/types/auth";
+import DBError from "../core/errors/DBError";
+import AccessDeniedError from "../core/errors/AccessDeniedError";
 
 export function getToken(authHeader: string) {
   const splitToken = authHeader.split(" ");
@@ -49,29 +51,29 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
 
   switch (userObj.role) {
     case UserRole.USER:
-      const [userExist, userExistError] = await handleAsync(
+      const { result: userExist, error: userExistError } = await handleAsync(
         new UserService().exist({ id: userObj.id })
       );
 
-      if (userExistError) throw new BaseError(400, "Check if user exist error");
+      if (userExistError) throw new DBError("Check if user exist error");
 
       if (!userExist) throw new BaseError(404, "User not found");
 
       break;
     case UserRole.ADMIN:
     case UserRole.WORKER:
-      const [worker, workerError] = await handleAsync(
+      const { result: worker, error: workerError } = await handleAsync(
         new WorkerService().getOne({
           search: { id: userObj.id },
           select: { isDeleted: true },
         })
       );
 
-      if (workerError) throw new BaseError(400, "Check if worker exist error");
+      if (workerError) throw new DBError("Check if worker exist error");
 
       if (!worker) throw new BaseError(404, "Worker not found");
 
-      if (worker.isDeleted) throw new BaseError(404, "Worker deleted");
+      if (worker.isDeleted) throw new AccessDeniedError("Worker deleted");
 
       break;
   }

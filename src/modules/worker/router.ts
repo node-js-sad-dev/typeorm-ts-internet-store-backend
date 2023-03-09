@@ -37,12 +37,6 @@ export default class WorkerRouter {
       roleValidation([UserRole.ADMIN]),
       requestHandler(this.controller.getOne)
     );
-    this.router.post(
-      "/",
-      auth,
-      roleValidation([UserRole.ADMIN]),
-      requestHandler(this.controller.register)
-    );
     this.router.put(
       "/:id",
       auth,

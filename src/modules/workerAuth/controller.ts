@@ -7,6 +7,8 @@ import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
 import jwt from "jsonwebtoken";
 import { getToken } from "../../middleware/auth";
+import DBError from "../../core/errors/DBError";
+import NotFoundError from "../../core/errors/NotFoundError";
 
 export default class WorkerAuthController {
   private service: WorkerAuthService;
@@ -21,16 +23,33 @@ export default class WorkerAuthController {
     this.workerService = new WorkerService();
   }
 
+  public register = async (req: Request): EndpointReturnType => {
+    const { body: workerInfo } = req;
+
+    const { result: worker, error: workerError } = await handleAsync(
+      this.service.create(workerInfo)
+    );
+
+    if (workerError) throw new DBError(workerError);
+
+    try {
+    } catch (e) {}
+
+    return {
+      status: 200,
+    };
+  };
+
   public login = async (req: Request): EndpointReturnType => {
     const { login, password } = req.body;
 
-    const [worker, workerError] = await handleAsync(
+    const { result: worker, error: workerError } = await handleAsync(
       this.workerService.getByLogin(login)
     );
 
-    if (workerError) throw new BaseError(400, "Check if worker exist error");
+    if (workerError) throw new DBError(workerError);
 
-    if (!worker) throw new BaseError(404, "Worker with such login not found");
+    if (!worker) throw new NotFoundError("Worker with such login not found");
 
     const validPassword = this.utils.checkPassword(
       password,
@@ -45,11 +64,11 @@ export default class WorkerAuthController {
       process.env.JWT_SECRET as string
     );
 
-    const [workerAuth, workerAuthError] = await handleAsync(
+    const { result: workerAuth, error: workerAuthError } = await handleAsync(
       this.service.create({ workerId: worker.id, token: token })
     );
 
-    if (workerAuthError) throw new BaseError(400, "Worker auth create error");
+    if (workerAuthError) throw new DBError(workerAuthError);
 
     return {
       status: 200,

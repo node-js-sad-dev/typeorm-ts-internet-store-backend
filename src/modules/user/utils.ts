@@ -28,7 +28,7 @@ export default class UserUtils {
       updateFields.passwordSalt = passwordSalt;
     }
 
-    const [user, userError] = await handleAsync(
+    const { result: user, error: userError } = await handleAsync(
       this.service.update({
         search: { id },
         update: updateFields,

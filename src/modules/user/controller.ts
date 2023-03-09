@@ -7,6 +7,7 @@ import { Request } from "express";
 import UserUtils from "./utils";
 import { User } from "../../entity/user";
 import AuthUtils from "../../utils/auth";
+import DBError from "../../core/errors/DBError";
 
 export default class UserController {
   private service: UserService;
@@ -33,7 +34,7 @@ export default class UserController {
       passwordSalt
     );
 
-    const [user, userError] = await handleAsync(
+    const { result: user, error: userError } = await handleAsync(
       this.service.create({
         ...registerFields,
         password: password,
@@ -41,7 +42,7 @@ export default class UserController {
       })
     );
 
-    if (userError) throw new BaseError(400, "Register user error");
+    if (userError) throw new DBError("Register user error");
 
     return {
       status: 201,
@@ -52,11 +53,11 @@ export default class UserController {
   public delete = async (req: Request): EndpointReturnType => {
     const { id } = req.user;
 
-    const [deleteUser, deleteUserError] = await handleAsync(
+    const { result: deleteUser, error: deleteUserError } = await handleAsync(
       this.service.delete({ id })
     );
 
-    if (deleteUserError) throw new BaseError(400, "Delete user error");
+    if (deleteUserError) throw new DBError("Delete user error");
 
     return {
       status: 204,
@@ -66,9 +67,14 @@ export default class UserController {
   public update = async (req: Request): EndpointReturnType => {
     const { id } = req.user;
 
-    const updatedUsers = await this.utils.updateUser(id, req.body);
+    const { result: usersUpdateResult, error: updateUsersError } =
+      await handleAsync(this.utils.updateUser(id, req.body));
 
-    if (updatedUsers.length === 0)
+    if (updateUsersError) throw new DBError(updateUsersError);
+
+    const { raw: updatedUsers } = usersUpdateResult!;
+
+    if (!updatedUsers || updatedUsers.length === 0)
       throw new BaseError(400, "User update error");
 
     return {
@@ -80,9 +86,15 @@ export default class UserController {
   public updateByAdmin = async (req: Request): EndpointReturnType => {
     const { id } = req.params;
 
-    const updatedUsers = await this.utils.updateUser(parseInt(id), req.body);
+    const { result: usersUpdateResult, error: updateUsersError } =
+      await handleAsync(this.utils.updateUser(parseInt(id), req.body));
 
-    if (updatedUsers.length === 0) throw new BaseError(400, "User not found");
+    if (updateUsersError) throw new DBError(updateUsersError);
+
+    const { raw: updatedUsers } = usersUpdateResult!;
+
+    if (updatedUsers.length === 0)
+      throw new BaseError(400, "User update error");
 
     return {
       status: 200,
@@ -93,18 +105,21 @@ export default class UserController {
   public get = async (req: Request): EndpointReturnType => {
     const { page, limit, ...searchOptions } = req.query;
 
-    const [[result, totalCount], getAndCountError] = await handleAsync(
-      Promise.all([
-        this.service.getListOfUsers(
-          searchOptions as Partial<User>,
-          page ? parseInt(page as string) : 1,
-          limit ? parseInt(limit as string) : 10
-        ),
-        this.service.getCountOfUsers(searchOptions as Partial<User>),
-      ])
-    );
+    const { result: usersListAndCount, error: getListAndCountError } =
+      await handleAsync(
+        Promise.all([
+          this.service.getListOfUsers(
+            searchOptions as Partial<User>,
+            page ? parseInt(page as string) : 1,
+            limit ? parseInt(limit as string) : 10
+          ),
+          this.service.getCountOfUsers(searchOptions as Partial<User>),
+        ])
+      );
 
-    if (getAndCountError) throw new BaseError(400, "Get users and count error");
+    if (getListAndCountError) throw new DBError("Get users and count error");
+
+    const [result, totalCount] = usersListAndCount!;
 
     return {
       status: 200,
@@ -116,11 +131,11 @@ export default class UserController {
   };
 
   public getCurrentUser = async (req: Request): EndpointReturnType => {
-    const [user, userError] = await handleAsync(
+    const { result: user, error: userError } = await handleAsync(
       this.service.getOne({ search: { id: req.user.id } })
     );
 
-    if (userError) throw new BaseError(400, "Get user error");
+    if (userError) throw new DBError(userError);
 
     return {
       status: 200,
@@ -131,7 +146,7 @@ export default class UserController {
   public getById = async (req: Request): EndpointReturnType => {
     const { id } = req.params;
 
-    const [user, userError] = await handleAsync(
+    const { result: user, error: userError } = await handleAsync(
       this.service.getOne({ search: { id: parseInt(id) } })
     );
 
