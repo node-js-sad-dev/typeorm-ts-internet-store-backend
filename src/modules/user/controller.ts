@@ -91,7 +91,7 @@ export default class UserController {
         ])
       );
 
-    if (getListAndCountError) throw new DBError("Get users and count error");
+    if (getListAndCountError) throw new DBError(getListAndCountError);
 
     const [result, totalCount] = usersListAndCount!;
 

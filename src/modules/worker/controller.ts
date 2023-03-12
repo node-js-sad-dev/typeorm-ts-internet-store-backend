@@ -4,6 +4,7 @@ import { EndpointReturnType } from "../../core/types/router";
 import { handleAsync } from "../../utils/handleAsync";
 import BaseError from "../../core/errors/BaseError";
 import DBError from "../../core/errors/DBError";
+import { Worker } from "../../entity/worker";
 
 export default class WorkerController {
   private service: WorkerService;
@@ -28,9 +29,30 @@ export default class WorkerController {
   };
 
   public getList = async (req: Request): EndpointReturnType => {
-    // const [[result, totalCount], resultError] = await this.service.getList({});
+    const { page, limit, ...searchOptions } = req.query;
+
+    const { result: workersListAndCount, error: getListAndCountError } =
+      await handleAsync(
+        Promise.all([
+          this.service.getListOfWorkers(
+            searchOptions as Partial<Worker>,
+            page ? parseInt(page as string) : 1,
+            limit ? parseInt(limit as string) : 10
+          ),
+          this.service.getCountOfWorkers(searchOptions as Partial<Worker>),
+        ])
+      );
+
+    if (getListAndCountError) throw new DBError(getListAndCountError);
+
+    const [result, totalCount] = workersListAndCount!;
+
     return {
       status: 200,
+      payload: {
+        result,
+        totalCount,
+      },
     };
   };
 
