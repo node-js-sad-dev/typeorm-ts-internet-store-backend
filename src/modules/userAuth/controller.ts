@@ -25,6 +25,32 @@ export default class UserAuthController {
     this.userService = new UserService();
   }
 
+  public register = async (req: Request): EndpointReturnType => {
+    const registerFields = req.body;
+
+    const passwordSalt = this.utils.generatePasswordSalt();
+
+    const password = this.utils.hashPassword(
+      registerFields.password,
+      passwordSalt
+    );
+
+    const { result: user, error: userError } = await handleAsync(
+      this.userService.create({
+        ...registerFields,
+        password: password,
+        passwordSalt: passwordSalt,
+      })
+    );
+
+    if (userError) throw new DBError(userError);
+
+    return {
+      status: 201,
+      payload: user,
+    };
+  };
+
   public login = async (req: Request): EndpointReturnType => {
     const { login, password } = req.body;
 
@@ -50,7 +76,7 @@ export default class UserAuthController {
     );
 
     const { result: userAuth, error: userAuthError } = await handleAsync(
-      this.service.create({ userId: user.id, token: token })
+      this.service.create({ user: { id: user.id }, token: token })
     );
 
     if (userAuthError) throw new DBError(userAuthError);

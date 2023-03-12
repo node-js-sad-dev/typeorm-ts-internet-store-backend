@@ -31,11 +31,6 @@ export default class UserRouter {
       this.validation.deleteUser,
       requestHandler(this.controller.delete)
     );
-    this.router.post(
-      "/register",
-      this.validation.registerUser,
-      requestHandler(this.controller.register)
-    );
     this.router.put(
       "/update",
       auth,

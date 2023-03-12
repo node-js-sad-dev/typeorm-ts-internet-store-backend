@@ -24,32 +24,6 @@ export default class UserController {
     this.authUtils = new AuthUtils();
   }
 
-  public register = async (req: Request): EndpointReturnType => {
-    const registerFields = req.body;
-
-    const passwordSalt = this.authUtils.generatePasswordSalt();
-
-    const password = this.authUtils.hashPassword(
-      registerFields.password,
-      passwordSalt
-    );
-
-    const { result: user, error: userError } = await handleAsync(
-      this.service.create({
-        ...registerFields,
-        password: password,
-        passwordSalt: passwordSalt,
-      })
-    );
-
-    if (userError) throw new DBError("Register user error");
-
-    return {
-      status: 201,
-      payload: user,
-    };
-  };
-
   public delete = async (req: Request): EndpointReturnType => {
     const { id } = req.user;
 

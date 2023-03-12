@@ -65,7 +65,7 @@ export default class WorkerAuthController {
     );
 
     const { result: workerAuth, error: workerAuthError } = await handleAsync(
-      this.service.create({ workerId: worker.id, token: token })
+      this.service.create({ worker: { id: worker.id }, token: token })
     );
 
     if (workerAuthError) throw new DBError(workerAuthError);

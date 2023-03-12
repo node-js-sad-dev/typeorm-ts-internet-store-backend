@@ -14,7 +14,4 @@ export class UserAuth {
 
   @ManyToOne(() => User, (user) => user.auths)
   user: User;
-
-  @Column()
-  userId: number;
 }

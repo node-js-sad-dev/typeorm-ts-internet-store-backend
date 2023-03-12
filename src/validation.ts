@@ -1,6 +1,8 @@
-import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
-import BaseError from "../core/errors/BaseError";
+import { NextFunction, Request, Response } from "express";
+import BaseError from "./core/errors/BaseError";
+
+export const passwordValidation = Joi.string().min(8).max(16);
 
 export const loginValidate = (
   req: Request,
@@ -11,7 +13,7 @@ export const loginValidate = (
 
   const validation = Joi.object({
     login: Joi.string().required(),
-    password: Joi.string().required().min(8).max(16),
+    password: passwordValidation,
   }).validate(body);
 
   if (validation.error) throw new BaseError(400, validation.error.message);

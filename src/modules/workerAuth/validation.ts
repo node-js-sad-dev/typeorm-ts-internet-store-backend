@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 import ValidationError from "../../core/errors/ValidationError";
 import { UserRole } from "../../core/types/auth";
+import { passwordValidation } from "../../validation";
 
 export default class WorkerAuthValidation {
   public workerRegisterValidation = (
@@ -19,7 +20,7 @@ export default class WorkerAuthValidation {
       lastName: Joi.string().required(),
       phone: Joi.string(),
       email: Joi.string(),
-      password: Joi.string(),
+      password: passwordValidation,
       role: Joi.allow(UserRole),
     }).validate(body);
 

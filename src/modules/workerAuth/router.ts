@@ -1,7 +1,7 @@
 import WorkerAuthController from "./controller";
 
 import { Router as ExpressRouter } from "express";
-import { loginValidate } from "../../utils/validate";
+import { loginValidate } from "../../validation";
 import { requestHandler } from "../../middleware/requestHandler";
 import { auth } from "../../middleware/auth";
 import { roleValidation } from "../../middleware/roleValidation";
